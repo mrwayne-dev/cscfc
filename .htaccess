@@ -1,0 +1,31 @@
+# ─── CSCFC SPA — Local Dev Routing (Apache / Laragon) ────────────────────────
+#
+# On GitHub Pages, routing is handled by the 404.html redirect trick and this
+# file is irrelevant (GitHub Pages ignores .htaccess).
+#
+# On your local Laragon server (Apache) this rewrites every clean URL like
+# /receipt, /leaderboard, /pay  →  index.html, so the SPA router takes over.
+# The browser URL is preserved, so location.pathname stays correct.
+# ─────────────────────────────────────────────────────────────────────────────
+
+Options -MultiViews
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Pass api/ requests straight through to PHP
+  RewriteRule ^api/  -  [L]
+
+  # Pass admin/ requests straight through (has its own HTML files)
+  RewriteRule ^admin/ - [L]
+
+  # Pass requests for real files (JS, CSS, images, fonts, pages/ fragments, etc.)
+  RewriteCond %{REQUEST_FILENAME} !-f
+
+  # Pass requests for real directories
+  RewriteCond %{REQUEST_FILENAME} !-d
+
+  # Everything else → SPA shell (URL stays unchanged in the browser)
+  RewriteRule ^ index.html [L]
+</IfModule>

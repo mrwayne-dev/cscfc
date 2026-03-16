@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(wc -l /c/mrwayne/web_dev/cscfc-payment-site/*.html /c/mrwayne/web_dev/cscfc-payment-site/admin/*.html /c/mrwayne/web_dev/cscfc-payment-site/assets/css/*.css /c/mrwayne/web_dev/cscfc-payment-site/assets/js/*.js)",
+      "Bash(ls -lh /c/mrwayne/web_dev/cscfc-payment-site/*.html /c/mrwayne/web_dev/cscfc-payment-site/admin/*.html /c/mrwayne/web_dev/cscfc-payment-site/assets/css/*.css /c/mrwayne/web_dev/cscfc-payment-site/assets/js/*.js)",
+      "Bash(grep -E \"\\\\.\\(html|css|js|php\\)$\")",
+      "Bash(ls -lh /c/mrwayne/web_dev/cscfc-payment-site/api/*.php)",
+      "Bash(wc -l \"C:\\\\mrwayne\\\\web_dev\\\\cscfc-payment-site/api\"/*.php)",
+      "Bash(wc -l \"C:\\\\mrwayne\\\\web_dev\\\\cscfc-payment-site/api/admin\"/*.php)",
+      "Bash(find C:mrwayneweb_devcscfc-payment-site -not -path */vendor/* -not -path */.claude/* -type f)",
+      "Bash(python3 -c \":*)",
+      "Bash(python3 /dev/stdin:*)",
+      "Bash(python3 write_admin.py)",
+      "Bash(python3 write_admin_js.py)",
+      "Bash(xargs ls:*)",
+      "Bash(wc -l api/mail/templates/*.html)",
+      "Bash(find . -type d -not -path */vendor/* -not -path */.git/*)",
+      "Bash(python3 write_backend.py)",
+      "Bash(ls api/*.php api/admin/*.php api/mail/*.php api/cron/*.php)"
+    ]
+  }
+}

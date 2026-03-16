@@ -1,0 +1,544 @@
+/* ─── Payment Page ───────────────────────────────────────────────────────────
+ * Split-card layout: campaign panel (left) + payment form (right).
+ * Shared styles (bg, overlay, loader, theme toggle) live in style.css.
+ * ─────────────────────────────────────────────────────────────────────────── */
+
+/* ══════════════════════════════════════════════════════════
+   PAGE SHELL
+   ══════════════════════════════════════════════════════════ */
+
+.payment-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background: transparent;
+}
+
+/* ══════════════════════════════════════════════════════════
+   CARD
+   ══════════════════════════════════════════════════════════ */
+
+.payment-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  max-width: 880px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.07),
+    0 24px 72px rgba(0, 0, 0, 0.72),
+    0 0 60px rgba(74, 143, 255, 0.06);
+}
+
+@media (max-width: 740px) {
+  .payment-card {
+    grid-template-columns: 1fr;
+    max-width: 460px;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   LEFT — Campaign Info Panel
+   ══════════════════════════════════════════════════════════ */
+
+.campaign-panel {
+  background: rgba(7, 9, 20, 0.82);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 38px 36px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+}
+
+/* Iridescent glow blobs (blue top-right, amber bottom-left) */
+.campaign-panel::before,
+.campaign-panel::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.campaign-panel::before {
+  width: 340px;
+  height: 340px;
+  top: -80px;
+  right: -100px;
+  background: radial-gradient(circle, rgba(74, 143, 255, 0.12), transparent 65%);
+}
+.campaign-panel::after {
+  width: 260px;
+  height: 260px;
+  bottom: -40px;
+  left: -70px;
+  background: radial-gradient(circle, rgba(200, 131, 42, 0.10), transparent 65%);
+}
+
+/* Brand row */
+.brand-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 48px;
+  position: relative;
+  z-index: 1;
+}
+
+.team-logo {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.brand-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.88);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Heading block */
+.campaign-heading-block {
+  flex: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.campaign-title {
+  font-size: 1.95rem;
+  font-weight: 700;
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+  color: #fff;
+  margin-bottom: 14px;
+}
+
+.campaign-desc {
+  font-size: 0.87rem;
+  color: rgba(255, 255, 255, 0.60);
+  line-height: 1.68;
+  max-width: 290px;
+}
+
+/* Progress */
+.progress-section {
+  margin-top: 28px;
+  margin-bottom: 28px;
+  position: relative;
+  z-index: 1;
+}
+
+.progress-labels {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 7px;
+}
+
+.progress-labels span {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 500;
+}
+
+#percentLabel {
+  font-weight: 700;
+  color: #4a8fff;
+  font-size: 0.88rem;
+}
+
+.progress-bar-track {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4a8fff, #c8832a);
+  border-radius: 999px;
+  transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 8px rgba(74, 143, 255, 0.40);
+}
+
+.progress-sub {
+  font-size: 0.74rem;
+  color: rgba(255, 255, 255, 0.38);
+  margin-top: 6px;
+}
+
+/* Stats row */
+.campaign-stats {
+  display: flex;
+  gap: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.10);
+  padding-top: 22px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Leaderboard link at the bottom of the campaign panel */
+.lb-panel-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 22px;
+  padding: 10px 14px;
+  border-radius: 9px;
+  border: 1px solid rgba(74, 143, 255, 0.28);
+  background: rgba(74, 143, 255, 0.08);
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+  position: relative;
+  z-index: 1;
+  transition: background 0.18s, border-color 0.18s, color 0.18s;
+}
+.lb-panel-link:hover {
+  background: rgba(74, 143, 255, 0.16);
+  border-color: rgba(74, 143, 255, 0.50);
+  color: #fff;
+  text-decoration: none;
+}
+.lb-panel-link i { font-size: 15px; }
+.lb-panel-link .lb-arrow { margin-left: auto; opacity: 0.5; }
+
+.stat-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-right: 14px;
+}
+
+.stat-item + .stat-item {
+  padding-left: 14px;
+  padding-right: 14px;
+  border-left: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.stat-item:last-child { padding-right: 0; }
+
+.stat-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.stat-label {
+  font-size: 0.66rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* ══════════════════════════════════════════════════════════
+   RIGHT — Payment Form Panel
+   ══════════════════════════════════════════════════════════ */
+
+.form-panel {
+  background: rgba(5, 7, 14, 0.88);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  padding: 38px 36px;
+  display: flex;
+  flex-direction: column;
+}
+
+html.light .form-panel {
+  background: rgba(240, 244, 255, 0.88);
+}
+
+.form-heading {
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.02em;
+  line-height: 1.18;
+  margin-bottom: 6px;
+}
+
+.form-sub {
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  margin-bottom: 22px;
+}
+
+/* ── Banner ── */
+.form-msg {
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.87rem;
+  font-weight: 500;
+  margin-bottom: 16px;
+  display: none;
+}
+.form-msg.is-error   { display: block; background: rgba(252,129,129,0.10); color: #fc8181; border: 1px solid rgba(252,129,129,0.18); }
+.form-msg.is-success { display: block; background: rgba(74,143,255,0.10);  color: #7ab8ff; border: 1px solid rgba(74,143,255,0.20); }
+
+/* ── Form groups ── */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  font-size: 0.81rem;
+  font-weight: 500;
+  color: var(--label);
+  letter-spacing: 0.01em;
+}
+
+/* ── Input icon wrapper ── */
+.input-icon-wrap {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-subtle);
+  font-size: 16px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Select caret */
+.input-icon-wrap.select-wrap::after {
+  content: '▾';
+  position: absolute;
+  right: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+/* ── Inputs & Selects (exclude radio/checkbox) ── */
+.form-group input:not([type="radio"]):not([type="checkbox"]),
+.form-group select {
+  width: 100%;
+  padding: 11px 14px 11px 40px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.93rem;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
+}
+
+html.light .form-group input:not([type="radio"]):not([type="checkbox"]),
+html.light .form-group select {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(0, 0, 0, 0.10);
+  color: #0f172a;
+}
+
+.form-group input::placeholder { color: var(--text-subtle); }
+
+.form-group input:not([type="radio"]):not([type="checkbox"]):focus,
+.form-group select:focus {
+  border-color: rgba(74, 143, 255, 0.55);
+  box-shadow: 0 0 0 3px rgba(74, 143, 255, 0.10);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+html.light .form-group input:not([type="radio"]):not([type="checkbox"]):focus,
+html.light .form-group select:focus {
+  background: #fff;
+}
+
+.form-group input[readonly] {
+  opacity: 0.60;
+  cursor: not-allowed;
+}
+
+/* Remove number input spin arrows */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] { -moz-appearance: textfield; }
+
+/* Select options */
+select option {
+  background: #0d1020;
+  color: var(--text);
+}
+html.light select option {
+  background: #fff;
+  color: #0f172a;
+}
+
+/* ── Radio group ── */
+.radio-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+.radio-option {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 10px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  font-size: 0.87rem;
+  color: var(--text-muted);
+  transition: border-color 0.18s, background 0.18s, color 0.18s;
+  user-select: none;
+  white-space: nowrap;
+}
+
+html.light .radio-option {
+  background: rgba(255, 255, 255, 0.70);
+  border-color: rgba(0, 0, 0, 0.09);
+}
+
+.radio-option:has(input:checked) {
+  border-color: rgba(74, 143, 255, 0.55);
+  background: rgba(74, 143, 255, 0.10);
+  color: #c8d8ff;
+}
+
+html.light .radio-option:has(input:checked) {
+  color: #1e3a6e;
+  background: rgba(74, 143, 255, 0.08);
+}
+
+/* Radio input — reset all inherited .form-group input rules */
+.radio-option input[type="radio"] {
+  flex-shrink: 0;
+  width: 15px !important;
+  height: 15px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 50% !important;
+  accent-color: #4a8fff;
+  cursor: pointer;
+  appearance: auto;
+  -webkit-appearance: auto;
+}
+.radio-option input[type="radio"]:focus {
+  box-shadow: none !important;
+  outline: none;
+}
+
+/* ── Field hints / errors ── */
+.field-hint {
+  font-size: 0.75rem;
+  color: var(--text-subtle);
+}
+
+.field-error {
+  font-size: 0.75rem;
+  color: var(--danger);
+  min-height: 1em;
+  display: block;
+}
+
+/* ── Submit button ── */
+.btn-pay {
+  width: 100%;
+  padding: 13px 20px;
+  margin-top: 8px;
+  background: rgba(74, 143, 255, 0.18);
+  color: #fff;
+  border: 1px solid rgba(74, 143, 255, 0.45);
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 0.97rem;
+  font-weight: 700;
+  letter-spacing: 0.005em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(74, 143, 255, 0.18), inset 0 1px 0 rgba(255,255,255,0.08);
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.btn-pay:hover:not(:disabled) {
+  background: rgba(74, 143, 255, 0.30);
+  border-color: rgba(74, 143, 255, 0.65);
+  box-shadow: 0 4px 24px rgba(74, 143, 255, 0.28), inset 0 1px 0 rgba(255,255,255,0.10);
+}
+
+.btn-pay:active:not(:disabled) {
+  background: rgba(74, 143, 255, 0.38);
+}
+
+.btn-pay:disabled {
+  opacity: 0.40;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Light mode: replace transparent glassmorphism with solid dark button */
+html.light .btn-pay {
+  background: #2d5fe0;
+  border-color: #3568f0;
+  color: #fff;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: 0 4px 20px rgba(45, 95, 224, 0.30);
+}
+html.light .btn-pay:hover:not(:disabled) {
+  background: #2452c4;
+  border-color: #2452c4;
+  box-shadow: 0 4px 24px rgba(45, 95, 224, 0.42);
+}
+html.light .btn-pay:active:not(:disabled) {
+  background: #1e44a8;
+}
+
+
+/* ── Mobile ── */
+@media (max-width: 740px) {
+  .campaign-panel { padding: 30px 24px; }
+  .form-panel     { padding: 30px 24px; }
+  .campaign-title { font-size: 1.6rem; }
+
+  .radio-group { flex-direction: column; }
+  .radio-option {
+    flex: none;
+    justify-content: flex-start;
+  }
+
+  .campaign-stats { flex-wrap: wrap; gap: 14px; }
+  .stat-item + .stat-item { border-left: none; padding-left: 0; }
+}

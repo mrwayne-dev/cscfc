@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSCFC Admin — Login</title>
+
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180"    href="../assets/favicon/apple-touch-icon.png">
+
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/admin.css">
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+  <script src="../assets/js/theme.js"></script>
+</head>
+<body>
+
+  <!-- Loader -->
+  <div id="pageLoader" aria-hidden="true">
+    <div class="loader-wrap">
+      <div class="loader-ring"></div>
+      <img src="../assets/cscfc.png" alt="" class="loader-logo">
+    </div>
+  </div>
+
+  <!-- Background -->
+  <div id="bgImage"></div>
+  <div id="bgOverlay"></div>
+
+  <!-- Theme toggle -->
+  <button id="themeToggle" aria-label="Toggle light / dark theme">
+    <span id="themeIcon">☀</span>
+  </button>
+
+  <div class="payment-page">
+    <div class="payment-card">
+
+      <!-- LEFT: Admin branding panel -->
+      <section class="campaign-panel" aria-label="Admin information">
+
+        <div class="brand-row">
+          <img src="../assets/cscfc.png" alt="CSCFC logo" class="team-logo">
+          <span class="brand-name">CSCFC</span>
+        </div>
+
+        <div class="campaign-heading-block">
+          <h1 class="campaign-title">Admin Panel.</h1>
+          <p class="campaign-desc">
+            Manage players, review all payments, and keep the campaign on track.
+          </p>
+        </div>
+
+        <ul class="admin-feature-list">
+          <li>
+            <i class="ph ph-users admin-feat-icon"></i>
+            <span>Manage player roster</span>
+          </li>
+          <li>
+            <i class="ph ph-receipt admin-feat-icon"></i>
+            <span>View all payments &amp; history</span>
+          </li>
+          <li>
+            <i class="ph ph-bell-ringing admin-feat-icon"></i>
+            <span>Send payment reminders</span>
+          </li>
+          <li>
+            <i class="ph ph-chart-bar admin-feat-icon"></i>
+            <span>Track campaign progress</span>
+          </li>
+        </ul>
+
+      </section>
+
+      <!-- RIGHT: Login form -->
+      <section class="form-panel" aria-label="Admin login">
+
+        <h2 class="form-heading">Welcome back.</h2>
+        <p class="form-sub">Sign in to the admin dashboard.</p>
+
+        <div id="loginMsg" class="form-msg" role="alert" aria-live="polite"></div>
+
+        <form id="loginForm" novalidate>
+
+          <div class="form-group">
+            <label for="usernameInput">Username</label>
+            <div class="input-icon-wrap">
+              <i class="ph ph-user input-icon" aria-hidden="true"></i>
+              <input type="text" id="usernameInput" name="username" required
+                     placeholder="admin" autocomplete="username">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="passwordInput">Password</label>
+            <div class="input-icon-wrap">
+              <i class="ph ph-lock input-icon" aria-hidden="true"></i>
+              <input type="password" id="passwordInput" name="password" required
+                     placeholder="••••••••" autocomplete="current-password">
+              <button type="button" id="pwToggle" class="pw-toggle" aria-label="Show password">
+                <i class="ph ph-eye" id="pwToggleIcon"></i>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" id="loginBtn" class="btn-pay" style="margin-top:20px">
+            <span class="btn-text">Sign In</span>
+          </button>
+
+        </form>
+
+        <p style="margin-top:18px; font-size:0.78rem; color:var(--text-subtle); text-align:center;">
+          <a href="../index.html" style="color:var(--accent);">← Back to player portal</a>
+        </p>
+
+      </section>
+
+    </div>
+  </div>
+
+  <script src="../assets/js/config.js"></script>
+  <script>
+    'use strict';
+
+    /* Dismiss loader immediately — no async data needed */
+    (function () {
+      const el = document.getElementById('pageLoader');
+      if (!el) return;
+      setTimeout(function () {
+        el.classList.add('loader-out');
+        setTimeout(function () { el.remove(); }, 520);
+      }, 800);
+    })();
+
+    /* Password show/hide */
+    document.getElementById('pwToggle').addEventListener('click', function () {
+      const inp  = document.getElementById('passwordInput');
+      const icon = document.getElementById('pwToggleIcon');
+      const show = inp.type === 'password';
+      inp.type   = show ? 'text' : 'password';
+      icon.className = show ? 'ph ph-eye-slash' : 'ph ph-eye';
+    });
+
+    /* Login form */
+    function showMsg(msg, type) {
+      const el = document.getElementById('loginMsg');
+      el.textContent = msg;
+      el.className   = 'form-msg is-' + type;
+    }
+
+    function setLoading(on) {
+      const btn = document.getElementById('loginBtn');
+      btn.disabled    = on;
+      btn.textContent = on ? 'Signing in…' : 'Sign In';
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      document.getElementById('loginMsg').className = 'form-msg';
+
+      const username = document.getElementById('usernameInput').value.trim();
+      const password = document.getElementById('passwordInput').value;
+
+      if (!username || !password) {
+        showMsg('Please enter your username and password.', 'error');
+        return;
+      }
+
+      setLoading(true);
+      try {
+        const res  = await fetch('../api/admin/login.php', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ username, password }),
+          credentials: 'include',
+        });
+        const data = await res.json();
+
+        if (data.status === 'success') {
+          window.location.href = 'index.html';
+        } else {
+          setLoading(false);
+          showMsg(data.message || 'Invalid credentials. Please try again.', 'error');
+        }
+      } catch (_) {
+        setLoading(false);
+        showMsg('Network error — please check your connection.', 'error');
+      }
+    });
+  </script>
+</body>
+</html>

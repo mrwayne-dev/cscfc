@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CSCFC — Redirecting…</title>
+  <script>
+    // Redirect old .html URL into the SPA with the correct clean path.
+    // Preserve ?reference=xxx query string so the receipt page can verify.
+    sessionStorage.setItem('spa-redirect', '/receipt' + location.search);
+    location.replace('/');
+  </script>
+</head>
+<body></body>
+</html>

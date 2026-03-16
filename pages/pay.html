@@ -1,0 +1,132 @@
+<div class="payment-page">
+  <div class="payment-card">
+
+    <!-- ───────────────── LEFT: Campaign Panel ───────────────── -->
+    <section class="campaign-panel" aria-label="Campaign information">
+
+      <div class="brand-row">
+        <img src="assets/cscfc.png" alt="CSCFC logo" class="team-logo">
+        <span class="brand-name">CSCFC</span>
+      </div>
+
+      <div class="campaign-heading-block">
+        <h1 class="campaign-title">Equipment Fund Campaign.</h1>
+        <p class="campaign-desc">
+          Help us kit up for the season. Every contribution brings
+          us closer, pay in full or split into installments.
+        </p>
+      </div>
+
+      <div class="progress-section">
+        <div class="progress-labels">
+          <span id="collectedLabel">Loading…</span>
+          <span id="percentLabel">—</span>
+        </div>
+        <div class="progress-bar-track"
+             role="progressbar" aria-valuenow="0"
+             aria-valuemin="0" aria-valuemax="100"
+             id="progressBarTrack">
+          <div class="progress-bar-fill" id="progressBar" style="width:0%"></div>
+        </div>
+        <p class="progress-sub" id="paidPlayersLabel">— / 25 players fully paid</p>
+      </div>
+
+      <div class="campaign-stats">
+        <div class="stat-item">
+          <span class="stat-value">₦7,000</span>
+          <span class="stat-label">Per Player</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">₦3,500</span>
+          <span class="stat-label">Min. Install</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value" id="teamTarget">₦175,000</span>
+          <span class="stat-label">Team Target</span>
+        </div>
+      </div>
+
+      <a href="/leaderboard" class="lb-panel-link">
+        <i class="ph ph-trophy"></i>
+        <span>View Leaderboard</span>
+        <i class="ph ph-arrow-right lb-arrow"></i>
+      </a>
+
+    </section>
+
+    <!-- ───────────────── RIGHT: Payment Form ───────────────── -->
+    <section class="form-panel" aria-label="Payment form">
+
+      <h2 class="form-heading">Make your contribution.</h2>
+      <p class="form-sub">Select your name and complete your payment.</p>
+
+      <div id="formMsg" class="form-msg" role="alert" aria-live="polite"></div>
+
+      <form id="paymentForm" novalidate>
+
+        <!-- Player name -->
+        <div class="form-group">
+          <label for="playerSelect">Your Name</label>
+          <div class="input-icon-wrap select-wrap">
+            <i class="ph ph-user input-icon" aria-hidden="true"></i>
+            <select id="playerSelect" name="player_id" required
+                    aria-describedby="playerError">
+              <option value="">Select your name</option>
+            </select>
+          </div>
+          <span class="field-error" id="playerError" aria-live="polite"></span>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="emailInput">Email Address</label>
+          <div class="input-icon-wrap">
+            <i class="ph ph-envelope-simple input-icon" aria-hidden="true"></i>
+            <input type="email" id="emailInput" name="email" required
+                   placeholder="you@example.com" autocomplete="email"
+                   aria-describedby="emailError">
+          </div>
+          <span class="field-error" id="emailError" aria-live="polite"></span>
+        </div>
+
+        <!-- Payment type -->
+        <div class="form-group">
+          <label>Payment Type</label>
+          <div class="radio-group" role="radiogroup" aria-label="Payment type">
+            <label class="radio-option">
+              <input type="radio" name="paymentType" value="full" id="payFull">
+              <span>Pay in Full</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="paymentType" value="installment"
+                     id="payInstall" checked>
+              <span>Pay Installment</span>
+            </label>
+          </div>
+          <span class="field-error" id="typeError" aria-live="polite"></span>
+        </div>
+
+        <!-- Amount -->
+        <div class="form-group">
+          <label for="amountInput">Amount (₦)</label>
+          <div class="input-icon-wrap">
+            <i class="ph ph-money input-icon" aria-hidden="true"></i>
+            <input type="number" id="amountInput" name="amount" required
+                   placeholder="Enter amount" min="3500" step="100"
+                   aria-describedby="amountHint amountError">
+          </div>
+          <span class="field-hint" id="amountHint">Minimum: ₦3,500</span>
+          <span class="field-error" id="amountError" aria-live="polite"></span>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" id="payBtn" class="btn-pay">
+          <span class="btn-text">Proceed to Pay</span>
+        </button>
+
+      </form>
+
+    </section>
+
+  </div>
+</div>

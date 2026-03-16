@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSCFC Equipment Fund</title>
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180"    href="assets/favicon/apple-touch-icon.png">
+
+  <!-- All page styles loaded once in the shell -->
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/payment.css">
+  <link rel="stylesheet" href="assets/css/leaderboard.css">
+  <link rel="stylesheet" href="assets/css/receipt.css">
+
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+
+  <!-- theme.js FIRST — applies dark/light class on <html> before first paint -->
+  <script src="assets/js/theme.js"></script>
+
+  <!-- GitHub Pages SPA: replay the path saved by 404.html -->
+  <script>
+    (function () {
+      var redirect = sessionStorage.getItem('spa-redirect');
+      if (redirect && redirect !== '/') {
+        sessionStorage.removeItem('spa-redirect');
+        history.replaceState(null, null, redirect);
+      }
+    })();
+  </script>
+</head>
+
+<body>
+
+  <!-- ── Shared chrome (persists across all route changes) ── -->
+
+  <div id="pageLoader" aria-hidden="true">
+    <div class="loader-wrap">
+      <div class="loader-ring"></div>
+      <img src="assets/cscfc.png" alt="" class="loader-logo">
+    </div>
+  </div>
+
+  <div id="bgImage"></div>
+  <div id="bgOverlay"></div>
+
+  <button id="themeToggle" aria-label="Toggle light / dark theme">
+    <span id="themeIcon">☀</span>
+  </button>
+
+  <!-- ── SPA mount point — router swaps content here ── -->
+  <div id="app"></div>
+
+  <!-- Config (defines API_BASE, PLAYER_TARGET, MIN_INSTALLMENT, BASE_PATH) -->
+  <script src="assets/js/config.js"></script>
+
+  <!-- Page modules — each exposes one init() on window.CSCFC -->
+  <script src="assets/js/payment.js"></script>
+  <script src="assets/js/leaderboard.js"></script>
+  <script src="assets/js/receipt.js"></script>
+
+  <!-- Router — boots last, reads current path, mounts first page -->
+  <script src="assets/js/router.js"></script>
+
+</body>
+</html>

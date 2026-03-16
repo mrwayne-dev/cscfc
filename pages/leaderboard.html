@@ -1,0 +1,67 @@
+<div class="lb-page">
+  <div class="lb-card">
+
+    <!-- Header -->
+    <div class="lb-header">
+      <a href="/" class="lb-back">
+        <i class="ph ph-arrow-left"></i>
+        <span>Make a Payment</span>
+      </a>
+
+      <div class="lb-brand">
+        <img src="assets/cscfc.png" alt="CSCFC" class="lb-logo">
+        <span class="lb-title">Payment Leaderboard</span>
+      </div>
+
+      <div class="lb-summary">
+        <div class="lb-summary-stat">
+          <span id="lb-collected" class="lb-stat-val">—</span>
+          <span class="lb-summary-label">Collected</span>
+        </div>
+        <div class="lb-summary-stat">
+          <span id="lb-target" class="lb-stat-val">₦175,000</span>
+          <span class="lb-summary-label">Target</span>
+        </div>
+        <div class="lb-summary-stat">
+          <span id="lb-paid-count" class="lb-stat-val">—</span>
+          <span class="lb-summary-label">Fully Paid</span>
+        </div>
+      </div>
+
+      <!-- Progress -->
+      <div class="lb-progress-wrap">
+        <div class="lb-progress-track">
+          <div class="lb-progress-fill" id="lb-progress-bar" style="width:0%"></div>
+        </div>
+        <span class="lb-progress-pct" id="lb-pct">0%</span>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="lb-table-wrap">
+      <table class="lb-table" id="lbTable">
+        <thead>
+          <tr>
+            <th class="col-rank">#</th>
+            <th class="col-name">Player</th>
+            <th class="col-paid">Amount Paid</th>
+            <th class="col-balance">Remaining</th>
+            <th class="col-status">Status</th>
+          </tr>
+        </thead>
+        <tbody id="lbBody">
+          <!-- Populated by JS -->
+          <tr class="lb-skeleton"><td colspan="5"><div class="skel-row"></div></td></tr>
+          <tr class="lb-skeleton"><td colspan="5"><div class="skel-row"></div></td></tr>
+          <tr class="lb-skeleton"><td colspan="5"><div class="skel-row"></div></td></tr>
+        </tbody>
+      </table>
+
+      <div id="lbError" class="lb-error" hidden>
+        <i class="ph ph-warning-circle"></i>
+        <p>Could not load leaderboard data.</p>
+      </div>
+    </div>
+
+  </div>
+</div>

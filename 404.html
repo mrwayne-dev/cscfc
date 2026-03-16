@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CSCFC — Redirecting…</title>
+  <script>
+    // ─── GitHub Pages SPA — 404 redirect ──────────────────────────────────────
+    //
+    // GitHub Pages returns this 404.html when a user navigates directly to a
+    // clean URL like /leaderboard or /receipt?reference=xxx. We save the full
+    // path + query string to sessionStorage, then redirect to the site root so
+    // the SPA shell (index.html) can replay the correct route.
+    //
+    // SEGMENT_COUNT:
+    //   0 — custom domain  OR  user/org site (username.github.io)
+    //   1 — project site   (username.github.io/repo-name)
+    //
+    var SEGMENT_COUNT = 0;
+
+    var loc = window.location;
+    var base = loc.protocol + '//' + loc.hostname + (loc.port ? ':' + loc.port : '') +
+               loc.pathname.split('/').slice(0, 1 + SEGMENT_COUNT).join('/');
+
+    sessionStorage.setItem('spa-redirect', loc.pathname + loc.search);
+    loc.replace(base + '/');
+  </script>
+</head>
+<body></body>
+</html>

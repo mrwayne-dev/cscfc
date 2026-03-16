@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSCFC Admin — Dashboard</title>
+
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180"    href="../assets/favicon/apple-touch-icon.png">
+
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/admin.css">
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+  <script src="../assets/js/theme.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <!-- Loader -->
+  <div id="pageLoader" aria-hidden="true">
+    <div class="loader-wrap">
+      <div class="loader-ring"></div>
+      <img src="../assets/cscfc.png" alt="" class="loader-logo">
+    </div>
+  </div>
+
+  <!-- Admin shell -->
+  <div class="admin-shell" id="adminShell">
+
+    <!-- ── Sidebar ── -->
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="sidebar-logo">
+        <img src="../assets/cscfc.png" alt="CSCFC" class="sidebar-logo-img">
+      </div>
+
+      <nav class="sidebar-nav" aria-label="Admin navigation">
+        <button class="sidebar-btn active" data-section="dashboard" aria-label="Dashboard">
+          <i class="ph ph-squares-four"></i>
+          <span class="sidebar-tooltip">Dashboard</span>
+        </button>
+        <button class="sidebar-btn" data-section="players" aria-label="Players">
+          <i class="ph ph-users"></i>
+          <span class="sidebar-tooltip">Players</span>
+        </button>
+        <button class="sidebar-btn" data-section="payments" aria-label="Payments">
+          <i class="ph ph-receipt"></i>
+          <span class="sidebar-tooltip">Payments</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <button class="sidebar-btn sidebar-logout" id="logoutBtn" aria-label="Logout">
+          <i class="ph ph-sign-out"></i>
+          <span class="sidebar-tooltip">Logout</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- ── Main ── -->
+    <div class="admin-main">
+
+      <!-- Top bar -->
+      <header class="admin-topbar">
+        <div class="topbar-left">
+          <h1 class="topbar-title" id="topbarTitle">Dashboard</h1>
+          <span class="topbar-date" id="topbarDate"></span>
+        </div>
+        <div class="topbar-right">
+          <button class="topbar-icon-btn" id="refreshBtn" aria-label="Refresh data">
+            <i class="ph ph-arrows-clockwise"></i>
+          </button>
+          <button id="themeToggle" class="topbar-icon-btn" aria-label="Toggle light / dark theme">
+            <span id="themeIcon">☀</span>
+          </button>
+          <div class="admin-avatar" aria-label="Admin">AD</div>
+        </div>
+      </header>
+
+      <!-- ─── Section: Dashboard ─── -->
+      <section class="admin-section active" id="sec-dashboard">
+
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-card-icon" style="--icon-color: #4a8fff;">
+              <i class="ph ph-currency-ngn"></i>
+            </div>
+            <div class="stat-card-body">
+              <span class="stat-card-label">Total Collected</span>
+              <span class="stat-card-value" id="sc-collected">—</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon" style="--icon-color: #c8832a;">
+              <i class="ph ph-receipt"></i>
+            </div>
+            <div class="stat-card-body">
+              <span class="stat-card-label">Total Payments</span>
+              <span class="stat-card-value" id="sc-txcount">—</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon" style="--icon-color: #7ab8ff;">
+              <i class="ph ph-users"></i>
+            </div>
+            <div class="stat-card-body">
+              <span class="stat-card-label">Total Players</span>
+              <span class="stat-card-value" id="sc-players">—</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon" style="--icon-color: #4ade80;">
+              <i class="ph ph-check-circle"></i>
+            </div>
+            <div class="stat-card-body">
+              <span class="stat-card-label">Fully Paid</span>
+              <span class="stat-card-value" id="sc-fullypaid">—</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress bar -->
+        <div class="dash-progress-card">
+          <div class="dash-progress-header">
+            <span class="dash-progress-label">Campaign Progress</span>
+            <span class="dash-progress-pct" id="dash-pct">0%</span>
+          </div>
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill" id="dash-bar" style="width:0%"></div>
+          </div>
+          <div class="dash-progress-sub">
+            <span id="dash-collected-text">₦0 collected</span>
+            <span id="dash-target-text">target ₦175,000</span>
+          </div>
+        </div>
+
+        <!-- Charts row -->
+        <div class="chart-row">
+          <div class="chart-card chart-card--bar">
+            <div class="chart-card-header">
+              <span class="chart-card-title">Monthly Collections</span>
+              <span class="chart-card-sub">Last 6 months</span>
+            </div>
+            <div class="chart-canvas-wrap">
+              <canvas id="barChart"></canvas>
+            </div>
+          </div>
+          <div class="chart-card chart-card--donut">
+            <div class="chart-card-header">
+              <span class="chart-card-title">Payment Status</span>
+              <span class="chart-card-sub">Player breakdown</span>
+            </div>
+            <div class="chart-canvas-wrap">
+              <canvas id="donutChart"></canvas>
+            </div>
+            <div class="donut-legend" id="donutLegend"></div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ─── Section: Players ─── -->
+      <section class="admin-section" id="sec-players" hidden>
+
+        <div class="section-toolbar">
+          <h2 class="section-sub-heading">Player Roster</h2>
+          <button class="btn-admin-primary" id="toggleAddPlayer">
+            <i class="ph ph-plus"></i> Add Player
+          </button>
+        </div>
+
+        <!-- Add player form (collapsed by default) -->
+        <div class="add-player-form" id="addPlayerForm" hidden>
+          <div class="add-player-fields">
+            <div class="adm-form-group">
+              <label for="newPlayerName">Full Name</label>
+              <input type="text" id="newPlayerName" placeholder="e.g. John Doe">
+            </div>
+            <div class="adm-form-group">
+              <label for="newPlayerEmail">Email</label>
+              <input type="email" id="newPlayerEmail" placeholder="e.g. john@email.com">
+            </div>
+          </div>
+          <div class="add-player-actions">
+            <button class="btn-admin-primary" id="submitAddPlayer">
+              <i class="ph ph-check"></i> Save Player
+            </button>
+            <button class="btn-admin-ghost" id="cancelAddPlayer">Cancel</button>
+          </div>
+          <div id="addPlayerMsg" class="adm-msg" hidden></div>
+        </div>
+
+        <div class="adm-table-wrap">
+          <table class="adm-table" id="playersTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Amount Paid</th>
+                <th>Balance</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="playersBody">
+              <tr class="skeleton-row"><td colspan="7"><div class="skel skel-line"></div></td></tr>
+              <tr class="skeleton-row"><td colspan="7"><div class="skel skel-line"></div></td></tr>
+              <tr class="skeleton-row"><td colspan="7"><div class="skel skel-line"></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+      </section>
+
+      <!-- ─── Section: Payments ─── -->
+      <section class="admin-section" id="sec-payments" hidden>
+
+        <div class="section-toolbar">
+          <h2 class="section-sub-heading">Payment History</h2>
+          <button class="btn-admin-primary" id="sendRemindersBtn">
+            <i class="ph ph-bell-ringing"></i> Send Reminders
+          </button>
+        </div>
+
+        <div class="payments-toolbar">
+          <div class="tab-group" role="tablist">
+            <button class="tab-btn active" data-filter="all"     role="tab">All</button>
+            <button class="tab-btn"        data-filter="success" role="tab">Success</button>
+            <button class="tab-btn"        data-filter="pending" role="tab">Pending</button>
+            <button class="tab-btn"        data-filter="failed"  role="tab">Failed</button>
+          </div>
+          <div class="search-wrap">
+            <i class="ph ph-magnifying-glass"></i>
+            <input type="text" id="paymentsSearch" placeholder="Search player…" class="search-input">
+          </div>
+        </div>
+
+        <div class="adm-table-wrap">
+          <table class="adm-table" id="paymentsTable">
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th>Email</th>
+                <th>Amount</th>
+                <th>Reference</th>
+                <th>Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="paymentsBody">
+              <tr class="skeleton-row"><td colspan="6"><div class="skel skel-line"></div></td></tr>
+              <tr class="skeleton-row"><td colspan="6"><div class="skel skel-line"></div></td></tr>
+              <tr class="skeleton-row"><td colspan="6"><div class="skel skel-line"></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+      </section>
+
+    </div><!-- /.admin-main -->
+  </div><!-- /.admin-shell -->
+
+  <!-- Confirm modal -->
+  <div class="modal-overlay" id="confirmModal" hidden role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card">
+      <h3 class="modal-title" id="modalTitle">Confirm action</h3>
+      <p class="modal-body" id="modalBody">Are you sure?</p>
+      <div class="modal-actions">
+        <button class="btn-admin-danger" id="modalConfirmBtn">Confirm</button>
+        <button class="btn-admin-ghost"  id="modalCancelBtn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile floating dock (shown ≤560px, hidden on tablet/desktop via CSS) -->
+  <nav class="mobile-dock" id="mobileDock" aria-label="Mobile navigation">
+    <button class="dock-btn active" data-section="dashboard" aria-label="Dashboard">
+      <i class="ph ph-squares-four"></i>
+      <span>Home</span>
+    </button>
+    <button class="dock-btn" data-section="players" aria-label="Players">
+      <i class="ph ph-users"></i>
+      <span>Players</span>
+    </button>
+    <button class="dock-btn" data-section="payments" aria-label="Payments">
+      <i class="ph ph-receipt"></i>
+      <span>Payments</span>
+    </button>
+    <button class="dock-btn dock-btn-logout" id="dockLogoutBtn" aria-label="Logout">
+      <i class="ph ph-sign-out"></i>
+      <span>Logout</span>
+    </button>
+  </nav>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/admin.js"></script>
+</body>
+</html>

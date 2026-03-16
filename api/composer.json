@@ -1,0 +1,17 @@
+{
+    "name": "aleru/api",
+    "autoload": {
+        "psr-4": {
+            "Aleru\\Api\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "mrwayne-dev",
+            "email": "aleruchi0987@gmail.com"
+        }
+    ],
+    "require": {
+        "phpmailer/phpmailer": "^7.0"
+    }
+}
