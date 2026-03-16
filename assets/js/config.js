@@ -6,4 +6,4 @@ const MIN_INSTALLMENT = 3500;
 
 // SPA base path — '/' for a custom domain or user/org GitHub Pages site.
 // Change to '/repo-name/' when deploying as a GitHub Project Pages site.
-const BASE_PATH = '/';
+const BASE_PATH = 'https://mrwayne-dev.github.io/cscfc/';
