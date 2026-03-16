@@ -1,0 +1,13 @@
+# ─── Credentials — never push these ──────────────────────────────────────────
+api/config.php
+api/admin/setup.php
+
+# ─── Composer / dependencies ──────────────────────────────────────────────────
+# vendor/ is uploaded directly to the server; exclude from GitHub if large
+# Uncomment the line below if you want to exclude vendor/ from the repo:
+# api/vendor/
+
+# ─── Local / OS junk ──────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.zip

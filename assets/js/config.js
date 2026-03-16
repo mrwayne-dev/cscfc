@@ -1,6 +1,6 @@
 /* ─── App Configuration ─────────────────────────────────────────────────── */
 
-const API_BASE        = 'http://cscfc-payment-site.test/api';
+const API_BASE        = 'https://growthmining.org/api';
 const PLAYER_TARGET   = 7000;
 const MIN_INSTALLMENT = 3500;
 
