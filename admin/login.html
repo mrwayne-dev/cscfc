@@ -168,7 +168,7 @@
 
       setLoading(true);
       try {
-        const res  = await fetch('../api/admin/login.php', {
+        const res  = await fetch('https://growthmining.org/api/admin/login.php', {
           method:  'POST',
           headers: { 'Content-Type': 'application/json' },
           body:    JSON.stringify({ username, password }),
