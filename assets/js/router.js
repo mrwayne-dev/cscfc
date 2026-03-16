@@ -1,43 +1,45 @@
 /* ─── router.js — CSCFC SPA Router ───────────────────────────────────────────
  *
- * Handles client-side routing for GitHub Pages deployment.
- * Pages are fetched from pages/{name}.html and injected into #app.
- * Each page module exposes window.CSCFC.<module>.init() which is called
- * after the HTML fragment is mounted.
+ * Works for both:
+ *   • GitHub Project site  (mrwayne-dev.github.io/cscfc)  BASE_PATH = '/cscfc/'
+ *   • Local dev / custom domain                            BASE_PATH = '/'
  *
- * Clean URLs served:  /        → pay form
- *                     /pay     → pay form
- *                     /leaderboard  → leaderboard
- *                     /receipt     → receipt (keeps ?reference= query)
+ * Strategy:
+ *   - BASE_PREFIX = BASE_PATH with trailing slash removed ('/cscfc' or '')
+ *   - All incoming pathnames have BASE_PREFIX stripped before route lookup
+ *   - All outgoing push/replaceState calls have BASE_PREFIX re-added
  * ─────────────────────────────────────────────────────────────────────────── */
 
 'use strict';
 
 (function () {
 
+  /* ── Derive base prefix ───────────────────────────────────────────────────
+   * BASE_PATH is defined in config.js.
+   * '/cscfc/' → '/cscfc'   |   '/' → ''                                    */
+  var BASE  = (typeof BASE_PATH !== 'undefined') ? BASE_PATH : '/';
+  var BPFX  = BASE === '/' ? '' : BASE.replace(/\/$/, '');   // e.g. '/cscfc'
+
   /* ── Route map ────────────────────────────────────────────────────────────
-   * Each entry maps a pathname to a page fragment + page title + init call.
-   * Old .html paths are also mapped for backward compat (bookmarks / Paystack). */
+   * Keys are clean route paths — no base prefix, no query string.           */
   var ROUTES = {
     '/':                 { page: 'pay',         title: 'CSCFC Equipment Fund \u2014 Contribute' },
     '/pay':              { page: 'pay',         title: 'CSCFC Equipment Fund \u2014 Contribute' },
     '/index.html':       { page: 'pay',         title: 'CSCFC Equipment Fund \u2014 Contribute' },
-    '/leaderboard':      { page: 'leaderboard', title: 'CSCFC \u2014 Payment Leaderboard'      },
-    '/leaderboard.html': { page: 'leaderboard', title: 'CSCFC \u2014 Payment Leaderboard'      },
-    '/receipt':          { page: 'receipt',     title: 'CSCFC \u2014 Payment Receipt'          },
-    '/receipt.html':     { page: 'receipt',     title: 'CSCFC \u2014 Payment Receipt'          },
+    '/leaderboard':      { page: 'leaderboard', title: 'CSCFC \u2014 Payment Leaderboard'       },
+    '/leaderboard.html': { page: 'leaderboard', title: 'CSCFC \u2014 Payment Leaderboard'       },
+    '/receipt':          { page: 'receipt',     title: 'CSCFC \u2014 Payment Receipt'           },
+    '/receipt.html':     { page: 'receipt',     title: 'CSCFC \u2014 Payment Receipt'           },
   };
 
-  /* ── Page init dispatch ───────────────────────────────────────────────────
-   * Each page JS file registers its init function here via window.CSCFC. */
+  /* ── Page init dispatch ───────────────────────────────────────────────────*/
   var PAGE_INIT = {
     pay:         function () { window.CSCFC && CSCFC.payPage         && CSCFC.payPage.init();         },
     leaderboard: function () { window.CSCFC && CSCFC.leaderboardPage && CSCFC.leaderboardPage.init(); },
     receipt:     function () { window.CSCFC && CSCFC.receiptPage     && CSCFC.receiptPage.init();     },
   };
 
-  /* ── Loader helpers ───────────────────────────────────────────────────────
-   * Reuses the #pageLoader already in the shell. */
+  /* ── Loader helpers ───────────────────────────────────────────────────────*/
   function showLoader() {
     var el = document.getElementById('pageLoader');
     if (!el) return;
@@ -52,28 +54,36 @@
     setTimeout(function () { el.setAttribute('hidden', ''); }, 520);
   }
 
-  /* ── Route resolution ─────────────────────────────────────────────────────
-   * Strips trailing slash (except root), falls back to pay page. */
-  function resolve(path) {
-    var p = path.split('?')[0];           // drop query string for lookup
-    if (p.length > 1 && p.slice(-1) === '/') p = p.slice(0, -1);
-    return ROUTES[p] || ROUTES['/'];
+  /* ── toKey(fullPath) → clean route key ───────────────────────────────────
+   * '/cscfc/leaderboard'  → '/leaderboard'
+   * '/receipt?ref=xxx'    → '/receipt'
+   * '/cscfc/'             → '/'                                             */
+  function toKey(path) {
+    var p = path.split('?')[0];                    // strip query string
+    if (BPFX && p.indexOf(BPFX) === 0) {           // strip base prefix
+      p = p.slice(BPFX.length) || '/';
+    }
+    if (p.length > 1 && p.slice(-1) === '/') p = p.slice(0, -1); // strip trailing /
+    return p || '/';
   }
 
-  /* ── Core: load a route ───────────────────────────────────────────────────
-   * Fetches the HTML fragment, injects it, updates <title>, calls page init. */
-  var _currentPage = null;
+  /* ── toFull(routePath) → full path with base prefix ─────────────────────
+   * '/leaderboard' → '/cscfc/leaderboard'
+   * '/'            → '/cscfc/'                                              */
+  function toFull(routePath) {
+    if (routePath === '/') return BPFX + '/';
+    return BPFX + routePath;
+  }
 
-  function loadRoute(path) {
-    var route = resolve(path);
-    var app   = document.getElementById('app');
+  /* ── Resolve a full path to a route entry ────────────────────────────────*/
+  function resolve(fullPath) {
+    return ROUTES[toKey(fullPath)] || ROUTES['/'];
+  }
 
-    // If we're already on this page, just re-init (e.g. receipt with new ref)
-    if (route.page === _currentPage) {
-      PAGE_INIT[route.page]();
-      return;
-    }
-
+  /* ── Load a route ─────────────────────────────────────────────────────────
+   * Fetches the page fragment, injects into #app, calls page init.          */
+  function loadRoute(fullPath) {
+    var route = resolve(fullPath);
     showLoader();
 
     fetch(BASE_PATH + 'pages/' + route.page + '.html')
@@ -82,10 +92,9 @@
         return res.text();
       })
       .then(function (html) {
-        app.innerHTML      = html;
-        document.title     = route.title;
-        _currentPage       = route.page;
-        // Small tick to let the browser paint the injected DOM before init runs
+        document.getElementById('app').innerHTML = html;
+        document.title = route.title;
+        // Small tick so the browser paints injected DOM before init runs
         setTimeout(function () {
           PAGE_INIT[route.page]();
           hideLoader();
@@ -97,16 +106,18 @@
       });
   }
 
-  /* ── Public navigate() — use instead of href for SPA links ───────────────
-   * Called by onclick or programmatically to push a new route. */
-  window.navigate = function (path) {
-    history.pushState(null, null, path);
-    loadRoute(path);
+  /* ── Public navigate(routePath) ──────────────────────────────────────────
+   * Call with a clean route like navigate('/leaderboard').
+   * Adds the base prefix before pushing to history.                         */
+  window.navigate = function (routePath) {
+    var full = toFull(routePath);
+    history.pushState(null, null, full);
+    loadRoute(full);
   };
 
   /* ── Global link intercept ────────────────────────────────────────────────
-   * Catches clicks on <a href="..."> inside #app so we never get a page reload.
-   * External links, #hash links, and /admin/ links are let through normally. */
+   * Catches clicks on <a href="..."> so we never do a full page reload.
+   * Fragment hrefs use clean route paths like '/leaderboard' or '/'.        */
   document.addEventListener('click', function (e) {
     var a = e.target.closest('a[href]');
     if (!a) return;
@@ -120,18 +131,18 @@
 
     e.preventDefault();
 
-    // Resolve relative hrefs against the current location
-    var url = new URL(href, location.href);
-    history.pushState(null, null, url.pathname + url.search);
-    loadRoute(url.pathname + url.search);
+    // href is a clean route path ('/leaderboard', '/', etc.) — add base prefix
+    var full = href === '/' ? BPFX + '/' : BPFX + href;
+    history.pushState(null, null, full);
+    loadRoute(full);
   });
 
-  /* ── Browser back/forward ─────────────────────────────────────────────────*/
+  /* ── Browser back / forward ──────────────────────────────────────────────*/
   window.addEventListener('popstate', function () {
     loadRoute(location.pathname + location.search);
   });
 
-  /* ── Boot: load the page for the current URL ──────────────────────────────*/
+  /* ── Boot ────────────────────────────────────────────────────────────────*/
   loadRoute(location.pathname + location.search);
 
 })();

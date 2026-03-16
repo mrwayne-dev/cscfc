@@ -11,11 +11,11 @@
     // path + query string to sessionStorage, then redirect to the site root so
     // the SPA shell (index.html) can replay the correct route.
     //
-    // SEGMENT_COUNT:
+    // SEGMENT_COUNT — auto-detected:
+    //   1 — project site   (username.github.io/repo-name)  ← current deployment
     //   0 — custom domain  OR  user/org site (username.github.io)
-    //   1 — project site   (username.github.io/repo-name)
     //
-    var SEGMENT_COUNT = 0;
+    var SEGMENT_COUNT = window.location.hostname.endsWith('.github.io') ? 1 : 0;
 
     var loc = window.location;
     var base = loc.protocol + '//' + loc.hostname + (loc.port ? ':' + loc.port : '') +
