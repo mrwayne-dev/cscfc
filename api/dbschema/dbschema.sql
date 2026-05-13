@@ -10,11 +10,14 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- Players
 CREATE TABLE IF NOT EXISTS `players` (
   `id`             INT UNSIGNED  NOT NULL AUTO_INCREMENT,
-  `name`           VARCHAR(100)  NOT NULL,
-  `email`          VARCHAR(255)  NULL DEFAULT NULL,  -- populated on first payment
+  `name`           VARCHAR(100)  NOT NULL,                -- short display name (used in dropdown, leaderboard)
+  `full_name`      VARCHAR(150)  NULL DEFAULT NULL,       -- legal/full name (collected via Register or Pay form)
+  `matric_number`  VARCHAR(50)   NULL DEFAULT NULL,       -- university matric number (collected via Register or Pay form)
+  `email`          VARCHAR(255)  NULL DEFAULT NULL,       -- populated on first payment or via Register
   `target_amount`  INT UNSIGNED  NOT NULL DEFAULT 7000,
   `created_at`     TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_matric_number` (`matric_number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Payment transactions
@@ -84,7 +87,11 @@ INSERT IGNORE INTO `players` (`name`, `target_amount`) VALUES
 -- 2. Player status (fully_paid/partial/unpaid) is computed in PHP from
 --    the payments table sum. It is not stored in the DB.
 -- 3. Amounts are stored in Naira. The API multiplies x100 for Paystack (kobo).
--- 4. Player emails are NULL until a player makes their first payment.
---    The API captures their email on payment and writes it back to players.email.
+-- 4. Player emails are NULL until a player makes their first payment OR uses
+--    the /register page. Both flows write back to players.email.
+-- 5. full_name and matric_number are also NULL until collected. They can be set
+--    via the /register page, the /pay form, or the admin Add/Edit player UI.
+-- 6. For an existing DB, run api/dbschema/migration_001_player_profile.sql to
+--    add the new columns without touching seed data.
 
 SET FOREIGN_KEY_CHECKS = 1;

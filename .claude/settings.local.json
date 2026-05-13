@@ -16,7 +16,14 @@
       "Bash(wc -l api/mail/templates/*.html)",
       "Bash(find . -type d -not -path */vendor/* -not -path */.git/*)",
       "Bash(python3 write_backend.py)",
-      "Bash(ls api/*.php api/admin/*.php api/mail/*.php api/cron/*.php)"
+      "Bash(ls api/*.php api/admin/*.php api/mail/*.php api/cron/*.php)",
+      "Bash(node --check /home/mrwayne/Documents/wayne/web_dev/cscfc-payment-site/assets/js/admin.js)",
+      "Bash(node --check /home/mrwayne/Documents/wayne/web_dev/cscfc-payment-site/assets/js/payment.js)",
+      "Bash(node --check /home/mrwayne/Documents/wayne/web_dev/cscfc-payment-site/assets/js/register.js)",
+      "Bash(node --check /home/mrwayne/Documents/wayne/web_dev/cscfc-payment-site/assets/js/router.js)",
+      "Bash(php -l /home/mrwayne/Documents/wayne/web_dev/cscfc-payment-site/api/update_profile.php /home/mrwayne/Documents/wayne/web_dev/cscfc-payment-site/api/get_players.php /home/mrwayne/Documents/wayne/web_dev/cscfc-payment-site/api/get_user_balance.php /home/mrwayne/Documents/wayne/web_dev/cscfc-payment-site/api/initiate-payment.php /home/mrwayne/Documents/wayne/web_dev/cscfc-payment-site/api/admin/add_player.php /home/mrwayne/Documents/wayne/web_dev/cscfc-payment-site/api/admin/update_player.php /home/mrwayne/Documents/wayne/web_dev/cscfc-payment-site/api/admin/export_players.php /home/mrwayne/Documents/wayne/web_dev/cscfc-payment-site/api/admin/send_reminders.php)",
+      "Bash(php -l /home/mrwayne/Documents/wayne/web_dev/cscfc-payment-site/api/mail/mailer.php /home/mrwayne/Documents/wayne/web_dev/cscfc-payment-site/api/update_profile.php /home/mrwayne/Documents/wayne/web_dev/cscfc-payment-site/api/initiate-payment.php /home/mrwayne/Documents/wayne/web_dev/cscfc-payment-site/api/admin/add_player.php /home/mrwayne/Documents/wayne/web_dev/cscfc-payment-site/api/admin/update_player.php)",
+      "Bash(php -l /home/mrwayne/Documents/wayne/web_dev/cscfc-payment-site/api/initiate-payment.php)"
     ]
   }
 }

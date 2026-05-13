@@ -52,13 +52,23 @@
         <i class="ph ph-arrow-right lb-arrow"></i>
       </a>
 
+      <a href="/register" class="lb-panel-link">
+        <i class="ph ph-identification-card"></i>
+        <span>Register Your Details</span>
+        <i class="ph ph-arrow-right lb-arrow"></i>
+      </a>
+
     </section>
 
     <!-- ───────────────── RIGHT: Payment Form ───────────────── -->
     <section class="form-panel" aria-label="Payment form">
 
       <h2 class="form-heading">Make your contribution.</h2>
-      <p class="form-sub">Select your name and complete your payment.</p>
+      <p class="form-sub">
+        Select your name and complete your payment.
+        Already paid or just need to update your details?
+        <a href="/register">Go to Register &rarr;</a>
+      </p>
 
       <div id="formMsg" class="form-msg" role="alert" aria-live="polite"></div>
 
@@ -75,6 +85,32 @@
             </select>
           </div>
           <span class="field-error" id="playerError" aria-live="polite"></span>
+        </div>
+
+        <!-- Full name -->
+        <div class="form-group">
+          <label for="fullNameInput">Full Name</label>
+          <div class="input-icon-wrap">
+            <i class="ph ph-identification-card input-icon" aria-hidden="true"></i>
+            <input type="text" id="fullNameInput" name="full_name" required
+                   placeholder="e.g. Michael Adebayo" autocomplete="name"
+                   maxlength="150"
+                   aria-describedby="fullNameError">
+          </div>
+          <span class="field-error" id="fullNameError" aria-live="polite"></span>
+        </div>
+
+        <!-- Matric number -->
+        <div class="form-group">
+          <label for="matricInput">Matric Number</label>
+          <div class="input-icon-wrap">
+            <i class="ph ph-hash input-icon" aria-hidden="true"></i>
+            <input type="text" id="matricInput" name="matric_number" required
+                   placeholder="e.g. 20231234" autocomplete="off"
+                   maxlength="50"
+                   aria-describedby="matricError">
+          </div>
+          <span class="field-error" id="matricError" aria-live="polite"></span>
         </div>
 
         <!-- Email -->

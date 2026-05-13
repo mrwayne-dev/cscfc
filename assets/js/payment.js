@@ -78,11 +78,21 @@ CSCFC.payPage = (function () {
 
   var playerBalance = { total_paid: 0, remaining_balance: PLAYER_TARGET };
 
+  function prefillProfile(data) {
+    var fn = document.getElementById('fullNameInput');
+    var mn = document.getElementById('matricInput');
+    var em = document.getElementById('emailInput');
+    if (fn && data && data.full_name && !fn.value)     fn.value = data.full_name;
+    if (mn && data && data.matric_number && !mn.value) mn.value = data.matric_number;
+    if (em && data && data.email && !em.value)         em.value = data.email;
+  }
+
   async function fetchBalance(playerId) {
     try {
       var res  = await fetch(API_BASE + '/get_user_balance.php?player_id=' + playerId);
       var data = await res.json();
       playerBalance = data;
+      prefillProfile(data);
     } catch (_) {
       playerBalance = { total_paid: 0, remaining_balance: PLAYER_TARGET };
     }
@@ -124,7 +134,7 @@ CSCFC.payPage = (function () {
   }
 
   function clearErrors() {
-    ['playerError', 'emailError', 'typeError', 'amountError']
+    ['playerError', 'fullNameError', 'matricError', 'emailError', 'typeError', 'amountError']
       .forEach(function (id) { setFieldError(id, ''); });
     showBanner('', '');
   }
@@ -144,12 +154,22 @@ CSCFC.payPage = (function () {
     btn.textContent = on ? 'Processing\u2026' : 'Proceed to Pay';
   }
 
-  function validateForm(playerId, email, paymentType, amount) {
+  function validateForm(playerId, fullName, matric, email, paymentType, amount) {
     var valid = true;
     var remaining = playerBalance.remaining_balance;
 
     if (!playerId) {
       setFieldError('playerError', 'Please select your name.');
+      valid = false;
+    }
+
+    if (!fullName) {
+      setFieldError('fullNameError', 'Please enter your full name.');
+      valid = false;
+    }
+
+    if (!matric) {
+      setFieldError('matricError', 'Please enter your matric number.');
       valid = false;
     }
 
@@ -188,12 +208,14 @@ CSCFC.payPage = (function () {
     clearErrors();
 
     var playerId    = document.getElementById('playerSelect').value;
+    var fullName    = document.getElementById('fullNameInput').value.trim();
+    var matric      = document.getElementById('matricInput').value.trim();
     var email       = document.getElementById('emailInput').value.trim();
     var radioChecked = document.querySelector('input[name="paymentType"]:checked');
     var paymentType = radioChecked ? radioChecked.value : null;
     var amount      = document.getElementById('amountInput').value;
 
-    if (!validateForm(playerId, email, paymentType, amount)) return;
+    if (!validateForm(playerId, fullName, matric, email, paymentType, amount)) return;
 
     setLoading(true);
 
@@ -202,17 +224,43 @@ CSCFC.payPage = (function () {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify({
-          player_id:    Number(playerId),
-          email:        email,
-          amount:       Number(amount),
-          payment_type: paymentType,
+          player_id:     Number(playerId),
+          full_name:     fullName,
+          matric_number: matric,
+          email:         email,
+          amount:        Number(amount),
+          payment_type:  paymentType,
         }),
       });
 
       var data = await res.json();
 
       if (data.status === 'success' && data.authorization_url) {
-        window.location.href = data.authorization_url;
+        if (data.profile_email_sent) {
+          showBanner('Details saved — a confirmation email is on its way. Redirecting to payment…', 'success');
+        } else if (data.profile_updated) {
+          showBanner('Details saved. Redirecting to payment…', 'success');
+        } else {
+          showBanner('Redirecting to payment…', 'success');
+        }
+        // Brief beat so the user actually sees the confirmation before Paystack takes over
+        setTimeout(function () { window.location.href = data.authorization_url; }, 700);
+      } else if (data.code === 'already_paid') {
+        setLoading(false);
+        showBanner(
+          (data.message || 'You are already fully paid.') +
+            ' Need to update your details? ',
+          'success'
+        );
+        // Append a real link to the banner so it's a one-click jump
+        var msgEl = document.getElementById('formMsg');
+        if (msgEl) {
+          var a = document.createElement('a');
+          a.href = '/register';
+          a.textContent = 'Go to Register →';
+          a.style.fontWeight = '600';
+          msgEl.appendChild(a);
+        }
       } else {
         setLoading(false);
         showBanner(data.message || 'Payment could not be initiated. Please try again.', 'error');
@@ -237,10 +285,14 @@ CSCFC.payPage = (function () {
     loadSummary();
     loadPlayers();
 
-    // Player dropdown → fetch balance
+    // Player dropdown → clear profile fields, then fetch balance + prefill
     var playerSelect = document.getElementById('playerSelect');
     if (playerSelect) {
       playerSelect.addEventListener('change', function () {
+        ['fullNameInput', 'matricInput', 'emailInput'].forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) el.value = '';
+        });
         if (this.value) fetchBalance(this.value);
         else {
           playerBalance = { total_paid: 0, remaining_balance: PLAYER_TARGET };

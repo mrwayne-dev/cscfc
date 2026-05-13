@@ -86,6 +86,44 @@ function sendReceiptEmail(string $to, string $playerName, array $data): bool
 }
 
 /**
+ * Send a profile-saved confirmation email.
+ * Triggered whenever a player's full_name/matric_number/email is recorded
+ * (via the Register page, the first payment, or an admin add/edit).
+ *
+ * @param string $to            recipient email
+ * @param string $displayName   short roster name (for greeting)
+ * @param string $fullName      legal full name
+ * @param string $matricNumber  matric number
+ * @param bool   $hasOutstanding true if the player still owes part of the target
+ */
+function sendProfileSavedEmail(
+    string $to,
+    string $displayName,
+    string $fullName,
+    string $matricNumber,
+    bool $hasOutstanding = true
+): bool {
+    $vars = [
+        'logo_url'        => LOGO_URL,
+        'player_name'     => $displayName,
+        'full_name'       => htmlspecialchars($fullName,     ENT_QUOTES, 'UTF-8'),
+        'matric_number'   => htmlspecialchars($matricNumber, ENT_QUOTES, 'UTF-8'),
+        'email'           => htmlspecialchars($to,           ENT_QUOTES, 'UTF-8'),
+        'cta_heading'     => $hasOutstanding ? 'Ready to contribute?' : "You're fully paid up",
+        'cta_body'        => $hasOutstanding
+            ? 'Head over to the payment portal whenever you&rsquo;re ready &mdash; every contribution brings the squad closer to the full kit.'
+            : 'You&rsquo;ve already cleared your share &mdash; thanks for backing the team. You can still visit the leaderboard to see how everyone else is doing.',
+        'cta_button_text' => $hasOutstanding ? 'Make a Payment' : 'View Leaderboard',
+        'payment_url'     => $hasOutstanding ? APP_URL . '/pay'         : APP_URL . '/leaderboard',
+        'app_url'         => APP_URL,
+        'year'            => date('Y'),
+    ];
+
+    $html = renderTemplate('profile_saved', $vars);
+    return sendMail($to, $displayName, 'Your details are saved &#8212; CSCFC Equipment Fund', $html);
+}
+
+/**
  * Send a payment reminder email.
  */
 function sendReminderEmail(string $to, string $playerName, int $amountPaid, int $remaining): bool

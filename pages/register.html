@@ -1,0 +1,134 @@
+<div class="payment-page">
+  <div class="payment-card">
+
+    <!-- ───────────────── LEFT: Campaign Panel ───────────────── -->
+    <section class="campaign-panel" aria-label="Campaign information">
+
+      <div class="brand-row">
+        <img src="assets/cscfc.png" alt="CSCFC logo" class="team-logo">
+        <span class="brand-name">CSCFC</span>
+      </div>
+
+      <div class="campaign-heading-block">
+        <h1 class="campaign-title">Register or Update Your Details.</h1>
+        <p class="campaign-desc">
+          Save (or update) your full name, matric number, and email. Works
+          whether you&rsquo;ve already paid, paid in part, or haven&rsquo;t paid
+          at all &mdash; no payment is required on this page.
+        </p>
+      </div>
+
+      <div class="progress-section">
+        <div class="progress-labels">
+          <span id="collectedLabel">Loading&hellip;</span>
+          <span id="percentLabel">&mdash;</span>
+        </div>
+        <div class="progress-bar-track"
+             role="progressbar" aria-valuenow="0"
+             aria-valuemin="0" aria-valuemax="100"
+             id="progressBarTrack">
+          <div class="progress-bar-fill" id="progressBar" style="width:0%"></div>
+        </div>
+        <p class="progress-sub" id="paidPlayersLabel">&mdash; / 25 players fully paid</p>
+      </div>
+
+      <div class="campaign-stats">
+        <div class="stat-item">
+          <span class="stat-value">&#8358;7,000</span>
+          <span class="stat-label">Per Player</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">&#8358;3,500</span>
+          <span class="stat-label">Min. Install</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value" id="teamTarget">&#8358;175,000</span>
+          <span class="stat-label">Team Target</span>
+        </div>
+      </div>
+
+      <a href="/leaderboard" class="lb-panel-link">
+        <i class="ph ph-trophy"></i>
+        <span>View Leaderboard</span>
+        <i class="ph ph-arrow-right lb-arrow"></i>
+      </a>
+
+    </section>
+
+    <!-- ───────────────── RIGHT: Register Form ───────────────── -->
+    <section class="form-panel" aria-label="Player registration form">
+
+      <h2 class="form-heading">Save your profile.</h2>
+      <p class="form-sub">Pick your name from the roster and fill in your details.</p>
+
+      <div id="formMsg" class="form-msg" role="alert" aria-live="polite"></div>
+
+      <form id="registerForm" novalidate>
+
+        <!-- Player name -->
+        <div class="form-group">
+          <label for="regPlayerSelect">Your Roster Name</label>
+          <div class="input-icon-wrap select-wrap">
+            <i class="ph ph-user input-icon" aria-hidden="true"></i>
+            <select id="regPlayerSelect" name="player_id" required
+                    aria-describedby="regPlayerError">
+              <option value="">Select your name</option>
+            </select>
+          </div>
+          <span class="field-error" id="regPlayerError" aria-live="polite"></span>
+          <span class="field-hint" id="regPlayerStatus" aria-live="polite"></span>
+        </div>
+
+        <!-- Full name -->
+        <div class="form-group">
+          <label for="regFullName">Full Name</label>
+          <div class="input-icon-wrap">
+            <i class="ph ph-identification-card input-icon" aria-hidden="true"></i>
+            <input type="text" id="regFullName" name="full_name" required
+                   placeholder="e.g. Michael Adebayo" autocomplete="name"
+                   maxlength="150"
+                   aria-describedby="regFullNameError">
+          </div>
+          <span class="field-error" id="regFullNameError" aria-live="polite"></span>
+        </div>
+
+        <!-- Matric number -->
+        <div class="form-group">
+          <label for="regMatricNumber">Matric Number</label>
+          <div class="input-icon-wrap">
+            <i class="ph ph-hash input-icon" aria-hidden="true"></i>
+            <input type="text" id="regMatricNumber" name="matric_number" required
+                   placeholder="e.g. 20231234" autocomplete="off"
+                   maxlength="50"
+                   aria-describedby="regMatricNumberError">
+          </div>
+          <span class="field-error" id="regMatricNumberError" aria-live="polite"></span>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="regEmail">Email Address</label>
+          <div class="input-icon-wrap">
+            <i class="ph ph-envelope-simple input-icon" aria-hidden="true"></i>
+            <input type="email" id="regEmail" name="email" required
+                   placeholder="you@example.com" autocomplete="email"
+                   aria-describedby="regEmailError">
+          </div>
+          <span class="field-error" id="regEmailError" aria-live="polite"></span>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" id="regSaveBtn" class="btn-pay">
+          <span class="btn-text">Save Profile</span>
+        </button>
+
+        <p class="form-sub" style="margin-top:14px;text-align:center;">
+          Ready to contribute? <a href="/pay">Go to the payment page &rarr;</a>
+        </p>
+
+      </form>
+
+    </section>
+
+  </div>
+</div>

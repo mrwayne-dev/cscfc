@@ -164,17 +164,30 @@
 
         <div class="section-toolbar">
           <h2 class="section-sub-heading">Player Roster</h2>
-          <button class="btn-admin-primary" id="toggleAddPlayer">
-            <i class="ph ph-plus"></i> Add Player
-          </button>
+          <div class="section-toolbar-actions">
+            <button class="btn-admin-ghost" id="exportPlayersCsvBtn">
+              <i class="ph ph-download-simple"></i> Export CSV
+            </button>
+            <button class="btn-admin-primary" id="toggleAddPlayer">
+              <i class="ph ph-plus"></i> Add Player
+            </button>
+          </div>
         </div>
 
         <!-- Add player form (collapsed by default) -->
         <div class="add-player-form" id="addPlayerForm" hidden>
           <div class="add-player-fields">
             <div class="adm-form-group">
-              <label for="newPlayerName">Full Name</label>
-              <input type="text" id="newPlayerName" placeholder="e.g. John Doe">
+              <label for="newPlayerName">Display Name</label>
+              <input type="text" id="newPlayerName" placeholder="e.g. Michael">
+            </div>
+            <div class="adm-form-group">
+              <label for="newPlayerFullName">Full Name</label>
+              <input type="text" id="newPlayerFullName" placeholder="e.g. Michael Adebayo" maxlength="150">
+            </div>
+            <div class="adm-form-group">
+              <label for="newPlayerMatric">Matric Number</label>
+              <input type="text" id="newPlayerMatric" placeholder="e.g. 20231234" maxlength="50">
             </div>
             <div class="adm-form-group">
               <label for="newPlayerEmail">Email</label>
@@ -196,6 +209,8 @@
               <tr>
                 <th>#</th>
                 <th>Name</th>
+                <th>Full Name</th>
+                <th>Matric No.</th>
                 <th>Email</th>
                 <th>Amount Paid</th>
                 <th>Balance</th>
@@ -204,9 +219,9 @@
               </tr>
             </thead>
             <tbody id="playersBody">
-              <tr class="skeleton-row"><td colspan="7"><div class="skel skel-line"></div></td></tr>
-              <tr class="skeleton-row"><td colspan="7"><div class="skel skel-line"></div></td></tr>
-              <tr class="skeleton-row"><td colspan="7"><div class="skel skel-line"></div></td></tr>
+              <tr class="skeleton-row"><td colspan="9"><div class="skel skel-line"></div></td></tr>
+              <tr class="skeleton-row"><td colspan="9"><div class="skel skel-line"></div></td></tr>
+              <tr class="skeleton-row"><td colspan="9"><div class="skel skel-line"></div></td></tr>
             </tbody>
           </table>
         </div>
@@ -269,6 +284,36 @@
       <div class="modal-actions">
         <button class="btn-admin-danger" id="modalConfirmBtn">Confirm</button>
         <button class="btn-admin-ghost"  id="modalCancelBtn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit player modal -->
+  <div class="modal-overlay" id="editPlayerModal" hidden role="dialog" aria-modal="true" aria-labelledby="editPlayerTitle">
+    <div class="modal-card">
+      <h3 class="modal-title" id="editPlayerTitle">Edit Player</h3>
+      <div class="add-player-fields">
+        <div class="adm-form-group">
+          <label for="editPlayerName">Display Name</label>
+          <input type="text" id="editPlayerName" maxlength="100">
+        </div>
+        <div class="adm-form-group">
+          <label for="editPlayerFullName">Full Name</label>
+          <input type="text" id="editPlayerFullName" maxlength="150">
+        </div>
+        <div class="adm-form-group">
+          <label for="editPlayerMatric">Matric Number</label>
+          <input type="text" id="editPlayerMatric" maxlength="50">
+        </div>
+        <div class="adm-form-group">
+          <label for="editPlayerEmail">Email</label>
+          <input type="email" id="editPlayerEmail">
+        </div>
+      </div>
+      <div id="editPlayerMsg" class="adm-msg" hidden></div>
+      <div class="modal-actions">
+        <button class="btn-admin-primary" id="editPlayerSaveBtn">Save changes</button>
+        <button class="btn-admin-ghost"   id="editPlayerCancelBtn">Cancel</button>
       </div>
     </div>
   </div>

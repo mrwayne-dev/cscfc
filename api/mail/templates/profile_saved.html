@@ -265,7 +265,7 @@
 																	<table class="heading_block block-1" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
 																		<tr>
 																			<td class="pad" style="padding-bottom:8px;text-align:center;width:100%;">
-																				<h1 style="margin: 0; color: #040b22; direction: ltr; font-family: 'Inter','Helvetica'; font-size: 32px; font-weight: 600; letter-spacing: -1px; line-height: 1.2; text-align: left; margin-top: 0; margin-bottom: 0; mso-line-height-alt: 38px;"><span class="tinyMce-placeholder" style="word-break: break-word;">Still on the bench, {{player_name}}.</span></h1>
+																				<h1 style="margin: 0; color: #040b22; direction: ltr; font-family: 'Inter','Helvetica'; font-size: 32px; font-weight: 600; letter-spacing: -1px; line-height: 1.2; text-align: left; margin-top: 0; margin-bottom: 0; mso-line-height-alt: 38px;"><span class="tinyMce-placeholder" style="word-break: break-word;">You&rsquo;re on the roster, {{player_name}}.</span></h1>
 																			</td>
 																		</tr>
 																	</table>
@@ -273,7 +273,7 @@
 																		<tr>
 																			<td class="pad">
 																				<div style="color:#4a4f5f;direction:ltr;font-family:'Inter','Helvetica';font-size:16px;font-weight:300;letter-spacing:0px;line-height:1.2;text-align:left;mso-line-height-alt:19px;">
-																					<p style="margin: 0;">The CSCFC Equipment Fund campaign is in progress and you still have an outstanding balance. Here&rsquo;s where you stand:</p>
+																					<p style="margin: 0;">Thanks for registering your details with the CSCFC Equipment Fund. Here&rsquo;s what we have on file for you:</p>
 																				</div>
 																			</td>
 																		</tr>
@@ -294,7 +294,7 @@
 																	<table class="heading_block block-4" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
 																		<tr>
 																			<td class="pad" style="padding-bottom:12px;text-align:center;width:100%;">
-																				<h2 style="margin: 0; color: #040b22; direction: ltr; font-family: 'Inter','Helvetica'; font-size: 24px; font-weight: 600; letter-spacing: -1px; line-height: 1.2; text-align: left; margin-top: 0; margin-bottom: 0; mso-line-height-alt: 29px;"><span class="tinyMce-placeholder" style="word-break: break-word;">Your payment status</span></h2>
+																				<h2 style="margin: 0; color: #040b22; direction: ltr; font-family: 'Inter','Helvetica'; font-size: 24px; font-weight: 600; letter-spacing: -1px; line-height: 1.2; text-align: left; margin-top: 0; margin-bottom: 0; mso-line-height-alt: 29px;"><span class="tinyMce-placeholder" style="word-break: break-word;">Your details</span></h2>
 																			</td>
 																		</tr>
 																	</table>
@@ -303,8 +303,9 @@
 																			<td class="pad">
 																				<div style="margin-left:-20px">
 																					<ul start="1" style="margin-top: 0; margin-bottom: 0; list-style-type: none; padding-left: 0;">
-																						<li style="Margin: 0 0 8px 0;"><strong>Amount paid so far:</strong> {{amount_paid}}</li>
-																						<li style="Margin: 0 0 4px 0;"><strong>Outstanding balance:</strong> {{remaining_balance}}</li>
+																						<li style="Margin: 0 0 8px 0;"><strong>Full name:</strong> {{full_name}}</li>
+																							<li style="Margin: 0 0 8px 0;"><strong>Matric number:</strong> {{matric_number}}</li>
+																						<li style="Margin: 0 0 4px 0;"><strong>Email:</strong> {{email}}</li>
 																					</ul>
 																				</div>
 																			</td>
@@ -326,7 +327,7 @@
 																	<table class="heading_block block-7" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
 																		<tr>
 																			<td class="pad" style="padding-bottom:12px;text-align:center;width:100%;">
-																				<h2 style="margin: 0; color: #040b22; direction: ltr; font-family: 'Inter','Helvetica'; font-size: 24px; font-weight: 600; letter-spacing: -1px; line-height: 1.2; text-align: left; margin-top: 0; margin-bottom: 0; mso-line-height-alt: 29px;">Get in the game</h2>
+																				<h2 style="margin: 0; color: #040b22; direction: ltr; font-family: 'Inter','Helvetica'; font-size: 24px; font-weight: 600; letter-spacing: -1px; line-height: 1.2; text-align: left; margin-top: 0; margin-bottom: 0; mso-line-height-alt: 29px;">{{cta_heading}}</h2>
 																			</td>
 																		</tr>
 																	</table>
@@ -334,7 +335,7 @@
 																		<tr>
 																			<td class="pad">
 																				<div style="color:#4a4f5f;direction:ltr;font-family:'Inter','Helvetica';font-size:16px;font-weight:300;letter-spacing:0px;line-height:1.2;text-align:left;mso-line-height-alt:19px;">
-																					<p style="margin: 0;">Head over to the payment portal to clear your balance. Every contribution brings the squad closer to the full kit.</p>
+																					<p style="margin: 0;">{{cta_body}}</p>
 																				</div>
 																			</td>
 																		</tr>
@@ -348,7 +349,7 @@
 <w:anchorlock/>
 <v:textbox inset="0px,0px,0px,0px">
 <center dir="false" style="color:#ffffff;font-family:sans-serif;font-size:16px">
-<![endif]--><span class="button" style="background-color: #4a8fff; mso-shading: transparent; border-bottom: 0px solid transparent; border-left: 0px solid transparent; border-radius: 32px; border-right: 0px solid transparent; border-top: 0px solid transparent; color: #ffffff; display: inline-block; font-family: 'Inter','Helvetica'; font-size: 16px; font-weight: 400; mso-border-alt: none; padding-bottom: 5px; padding-top: 5px; padding-left: 24px; padding-right: 24px; text-align: center; width: auto; word-break: keep-all; letter-spacing: normal;"><span style="word-break: break-word; line-height: 32px;">Make a Payment</span></span><!--[if mso]></center></v:textbox></v:roundrect><![endif]--></a></div>
+<![endif]--><span class="button" style="background-color: #4a8fff; mso-shading: transparent; border-bottom: 0px solid transparent; border-left: 0px solid transparent; border-radius: 32px; border-right: 0px solid transparent; border-top: 0px solid transparent; color: #ffffff; display: inline-block; font-family: 'Inter','Helvetica'; font-size: 16px; font-weight: 400; mso-border-alt: none; padding-bottom: 5px; padding-top: 5px; padding-left: 24px; padding-right: 24px; text-align: center; width: auto; word-break: keep-all; letter-spacing: normal;"><span style="word-break: break-word; line-height: 32px;">{{cta_button_text}}</span></span><!--[if mso]></center></v:textbox></v:roundrect><![endif]--></a></div>
 																			</td>
 																		</tr>
 																	</table>

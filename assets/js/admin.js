@@ -188,19 +188,30 @@ function renderPlayers(players) {
   const tbody = document.getElementById('playersBody');
   if (!tbody) return;
   if (!players.length) {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text-subtle);">No players found.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:32px;color:var(--text-subtle);">No players found.</td></tr>';
     return;
   }
   tbody.innerHTML = players.map(function (p, i) {
+    const hasEmail = !!(p.email && String(p.email).trim());
+    const emailCell = hasEmail
+      ? '<td class="cell-mono">' + esc(p.email) + '</td>'
+      : '<td class="cell-mono" title="No email on file — will be skipped by reminder emails">' +
+          '<i class="ph ph-warning" style="color:#c8832a;margin-right:4px;"></i>—' +
+        '</td>';
     return (
       '<tr>' +
       '<td>' + (i + 1) + '</td>' +
       '<td class="cell-name">' + esc(p.name || '') + '</td>' +
-      '<td class="cell-mono">' + esc(p.email || '—') + '</td>' +
+      '<td>' + (p.full_name ? esc(p.full_name) : '<span style="color:var(--text-subtle);">—</span>') + '</td>' +
+      '<td class="cell-mono">' + (p.matric_number ? esc(p.matric_number) : '<span style="color:var(--text-subtle);">—</span>') + '</td>' +
+      emailCell +
       '<td class="cell-amount">' + fmt(p.amount_paid || 0) + '</td>' +
       '<td>' + fmt(p.remaining_balance || 0) + '</td>' +
       '<td>' + badge(p.status || 'unpaid') + '</td>' +
-      '<td><button class="btn-icon-sm" data-player-id="' + p.id + '" data-player-name="' + esc(p.name) + '" aria-label="Remove player"><i class="ph ph-trash"></i></button></td>' +
+      '<td>' +
+        '<button class="btn-icon-sm" data-edit-player="' + p.id + '" aria-label="Edit player"><i class="ph ph-pencil-simple"></i></button> ' +
+        '<button class="btn-icon-sm" data-player-id="' + p.id + '" data-player-name="' + esc(p.name) + '" aria-label="Remove player"><i class="ph ph-trash"></i></button>' +
+      '</td>' +
       '</tr>'
     );
   }).join('');
@@ -214,6 +225,12 @@ function renderPlayers(players) {
           await removePlayer(btn.dataset.playerId);
         }
       );
+    });
+  });
+
+  tbody.querySelectorAll('[data-edit-player]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      openEditPlayer(Number(btn.dataset.editPlayer));
     });
   });
 }
@@ -230,23 +247,37 @@ async function loadPlayers() {
 }
 
 async function addPlayer() {
-  const name  = document.getElementById('newPlayerName').value.trim();
-  const email = document.getElementById('newPlayerEmail').value.trim();
-  const msgEl = document.getElementById('addPlayerMsg');
-  if (!name) { showAdmMsg(msgEl, 'Player name is required.', 'error'); return; }
+  const name     = document.getElementById('newPlayerName').value.trim();
+  const fullName = document.getElementById('newPlayerFullName').value.trim();
+  const matric   = document.getElementById('newPlayerMatric').value.trim();
+  const email    = document.getElementById('newPlayerEmail').value.trim();
+  const msgEl    = document.getElementById('addPlayerMsg');
+  if (!name) { showAdmMsg(msgEl, 'Display name is required.', 'error'); return; }
   const btn = document.getElementById('submitAddPlayer');
   btn.disabled = true;
   try {
     const res  = await fetch(API_BASE + '/admin/add_player.php', {
       method: 'POST', credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: name, email: email }),
+      body: JSON.stringify({
+        name:          name,
+        full_name:     fullName,
+        matric_number: matric,
+        email:         email,
+      }),
     });
     const data = await res.json();
     if (data.status === 'success') {
-      showAdmMsg(msgEl, 'Player added successfully.', 'success');
-      document.getElementById('newPlayerName').value = '';
-      document.getElementById('newPlayerEmail').value = '';
+      showAdmMsg(
+        msgEl,
+        data.email_sent
+          ? 'Player added — confirmation email sent.'
+          : 'Player added.',
+        'success'
+      );
+      ['newPlayerName', 'newPlayerFullName', 'newPlayerMatric', 'newPlayerEmail'].forEach(function (id) {
+        document.getElementById(id).value = '';
+      });
       loadPlayers();
     } else {
       showAdmMsg(msgEl, data.message || 'Failed to add player.', 'error');
@@ -256,6 +287,71 @@ async function addPlayer() {
   } finally {
     btn.disabled = false;
   }
+}
+
+/* Edit player flow */
+let _editPlayerId = null;
+
+function openEditPlayer(playerId) {
+  const p = _allPlayers.find(function (x) { return Number(x.id) === Number(playerId); });
+  if (!p) return;
+  _editPlayerId = playerId;
+  document.getElementById('editPlayerName').value     = p.name || '';
+  document.getElementById('editPlayerFullName').value = p.full_name || '';
+  document.getElementById('editPlayerMatric').value   = p.matric_number || '';
+  document.getElementById('editPlayerEmail').value    = p.email || '';
+  const msg = document.getElementById('editPlayerMsg');
+  if (msg) { msg.hidden = true; msg.textContent = ''; }
+  document.getElementById('editPlayerModal').hidden = false;
+}
+
+function closeEditPlayer() {
+  document.getElementById('editPlayerModal').hidden = true;
+  _editPlayerId = null;
+}
+
+async function saveEditPlayer() {
+  if (_editPlayerId === null) return;
+  const name     = document.getElementById('editPlayerName').value.trim();
+  const fullName = document.getElementById('editPlayerFullName').value.trim();
+  const matric   = document.getElementById('editPlayerMatric').value.trim();
+  const email    = document.getElementById('editPlayerEmail').value.trim();
+  const msgEl    = document.getElementById('editPlayerMsg');
+  if (!name)  { showAdmMsg(msgEl, 'Display name is required.', 'error'); return; }
+  if (!email) { showAdmMsg(msgEl, 'Email is required.',        'error'); return; }
+  const btn = document.getElementById('editPlayerSaveBtn');
+  btn.disabled = true;
+  try {
+    const res  = await fetch(API_BASE + '/admin/update_player.php', {
+      method: 'POST', credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        player_id:     Number(_editPlayerId),
+        name:          name,
+        full_name:     fullName,
+        matric_number: matric,
+        email:         email,
+      }),
+    });
+    const data = await res.json();
+    if (data.status === 'success') {
+      closeEditPlayer();
+      loadPlayers();
+      if (data.message) alert(data.message);
+    } else {
+      showAdmMsg(msgEl, data.message || 'Failed to update player.', 'error');
+    }
+  } catch (_) {
+    showAdmMsg(msgEl, 'Network error.', 'error');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+/* CSV export — browser navigation handles the download via Content-Disposition.
+   We open in a new tab so the admin page state isn't lost. */
+function exportPlayersCsv() {
+  window.open(API_BASE + '/admin/export_players.php', '_blank');
 }
 
 async function removePlayer(id) {
@@ -323,6 +419,45 @@ async function sendReminders() {
     alert(data.message || 'Reminders sent.');
   } catch (_) {
     alert('Network error sending reminders.');
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
+/* Open the Send Reminders confirm dialog with a coverage breakdown.
+   Always queries fresh data so the admin sees accurate counts even when
+   they trigger the action without first visiting the Players tab. */
+async function confirmSendReminders() {
+  const btn = document.getElementById('sendRemindersBtn');
+  if (btn) btn.disabled = true;
+  try {
+    const res  = await fetch(API_BASE + '/get_players.php', { credentials: 'include' });
+    const data = await res.json();
+    const players = Array.isArray(data.players) ? data.players : [];
+    const outstanding = players.filter(function (p) {
+      return (p.remaining_balance || 0) > 0;
+    });
+    const willReceive = outstanding.filter(function (p) { return !!p.email; }).length;
+    const skipped     = outstanding.length - willReceive;
+
+    let body;
+    if (outstanding.length === 0) {
+      body = 'Every player is fully paid — there is no one to remind.';
+    } else if (skipped === 0) {
+      body = 'This will send a reminder email to ' + willReceive + ' player(s) with an outstanding balance.';
+    } else {
+      body = 'This will send a reminder to ' + willReceive + ' player(s). ' +
+             skipped + ' player(s) have no email on file and will be skipped — ' +
+             'add their email via the Edit button or ask them to use the Register page.';
+    }
+
+    openConfirm('Send Payment Reminders', body, willReceive > 0 ? sendReminders : null);
+  } catch (_) {
+    openConfirm(
+      'Send Payment Reminders',
+      'Could not check coverage. Send anyway?',
+      sendReminders
+    );
   } finally {
     if (btn) btn.disabled = false;
   }
@@ -420,13 +555,18 @@ document.addEventListener('DOMContentLoaded', async function () {
     renderPayments();
   });
 
-  /* Send reminders */
-  document.getElementById('sendRemindersBtn').addEventListener('click', function () {
-    openConfirm(
-      'Send Payment Reminders',
-      'This will send reminder emails to all players with an outstanding balance. Continue?',
-      sendReminders
-    );
+  /* Send reminders — coverage-aware confirm */
+  document.getElementById('sendRemindersBtn').addEventListener('click', confirmSendReminders);
+
+  /* Export CSV */
+  var exportBtn = document.getElementById('exportPlayersCsvBtn');
+  if (exportBtn) exportBtn.addEventListener('click', exportPlayersCsv);
+
+  /* Edit player modal */
+  document.getElementById('editPlayerSaveBtn').addEventListener('click', saveEditPlayer);
+  document.getElementById('editPlayerCancelBtn').addEventListener('click', closeEditPlayer);
+  document.getElementById('editPlayerModal').addEventListener('click', function (e) {
+    if (e.target === this) closeEditPlayer();
   });
 
   /* Modal */

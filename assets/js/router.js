@@ -26,6 +26,8 @@
     '/':                 { page: 'pay',         title: 'CSCFC Equipment Fund \u2014 Contribute' },
     '/pay':              { page: 'pay',         title: 'CSCFC Equipment Fund \u2014 Contribute' },
     '/index.html':       { page: 'pay',         title: 'CSCFC Equipment Fund \u2014 Contribute' },
+    '/register':         { page: 'register',    title: 'CSCFC \u2014 Register Your Details'     },
+    '/register.html':    { page: 'register',    title: 'CSCFC \u2014 Register Your Details'     },
     '/leaderboard':      { page: 'leaderboard', title: 'CSCFC \u2014 Payment Leaderboard'       },
     '/leaderboard.html': { page: 'leaderboard', title: 'CSCFC \u2014 Payment Leaderboard'       },
     '/receipt':          { page: 'receipt',     title: 'CSCFC \u2014 Payment Receipt'           },
@@ -35,6 +37,7 @@
   /* ── Page init dispatch ───────────────────────────────────────────────────*/
   var PAGE_INIT = {
     pay:         function () { window.CSCFC && CSCFC.payPage         && CSCFC.payPage.init();         },
+    register:    function () { window.CSCFC && CSCFC.registerPage    && CSCFC.registerPage.init();    },
     leaderboard: function () { window.CSCFC && CSCFC.leaderboardPage && CSCFC.leaderboardPage.init(); },
     receipt:     function () { window.CSCFC && CSCFC.receiptPage     && CSCFC.receiptPage.init();     },
   };

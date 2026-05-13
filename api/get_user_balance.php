@@ -16,6 +16,8 @@ $row = $db->prepare("
     SELECT
         pl.id,
         pl.name,
+        pl.full_name,
+        pl.matric_number,
         pl.email,
         pl.target_amount,
         COALESCE(SUM(CASE WHEN py.payment_status = 'success' THEN py.amount ELSE 0 END), 0) AS amount_paid
@@ -38,6 +40,8 @@ $remaining = max(0, $target - $paid);
 json_ok([
     'player_id'         => (int) $player['id'],
     'name'              => $player['name'],
+    'full_name'         => $player['full_name'],
+    'matric_number'     => $player['matric_number'],
     'email'             => $player['email'],
     'target_amount'     => $target,
     'amount_paid'       => $paid,
