@@ -23,7 +23,12 @@
       "Bash(node --check /home/mrwayne/Documents/wayne/web_dev/cscfc-payment-site/assets/js/router.js)",
       "Bash(php -l /home/mrwayne/Documents/wayne/web_dev/cscfc-payment-site/api/update_profile.php /home/mrwayne/Documents/wayne/web_dev/cscfc-payment-site/api/get_players.php /home/mrwayne/Documents/wayne/web_dev/cscfc-payment-site/api/get_user_balance.php /home/mrwayne/Documents/wayne/web_dev/cscfc-payment-site/api/initiate-payment.php /home/mrwayne/Documents/wayne/web_dev/cscfc-payment-site/api/admin/add_player.php /home/mrwayne/Documents/wayne/web_dev/cscfc-payment-site/api/admin/update_player.php /home/mrwayne/Documents/wayne/web_dev/cscfc-payment-site/api/admin/export_players.php /home/mrwayne/Documents/wayne/web_dev/cscfc-payment-site/api/admin/send_reminders.php)",
       "Bash(php -l /home/mrwayne/Documents/wayne/web_dev/cscfc-payment-site/api/mail/mailer.php /home/mrwayne/Documents/wayne/web_dev/cscfc-payment-site/api/update_profile.php /home/mrwayne/Documents/wayne/web_dev/cscfc-payment-site/api/initiate-payment.php /home/mrwayne/Documents/wayne/web_dev/cscfc-payment-site/api/admin/add_player.php /home/mrwayne/Documents/wayne/web_dev/cscfc-payment-site/api/admin/update_player.php)",
-      "Bash(php -l /home/mrwayne/Documents/wayne/web_dev/cscfc-payment-site/api/initiate-payment.php)"
+      "Bash(php -l /home/mrwayne/Documents/wayne/web_dev/cscfc-payment-site/api/initiate-payment.php)",
+      "Bash(sed -n '1,15p')",
+      "Bash(php -l api/initiate-payment.php)",
+      "Bash(php -l api/update_profile.php)",
+      "Bash(php -l api/admin/update_player.php)",
+      "Bash(php -l api/admin/add_player.php)"
     ]
   }
 }

@@ -114,7 +114,7 @@ function sendProfileSavedEmail(
             ? 'Head over to the payment portal whenever you&rsquo;re ready &mdash; every contribution brings the squad closer to the full kit.'
             : 'You&rsquo;ve already cleared your share &mdash; thanks for backing the team. You can still visit the leaderboard to see how everyone else is doing.',
         'cta_button_text' => $hasOutstanding ? 'Make a Payment' : 'View Leaderboard',
-        'payment_url'     => $hasOutstanding ? APP_URL . '/pay'         : APP_URL . '/leaderboard',
+        'cta_url'         => $hasOutstanding ? APP_URL . '/pay'  : APP_URL . '/leaderboard',
         'app_url'         => APP_URL,
         'year'            => date('Y'),
     ];

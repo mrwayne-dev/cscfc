@@ -72,9 +72,10 @@ CSCFC.registerPage = (function () {
     var fn = document.getElementById('regFullName');
     var mn = document.getElementById('regMatricNumber');
     var em = document.getElementById('regEmail');
-    if (fn && p.full_name)     fn.value = p.full_name;
-    if (mn && p.matric_number) mn.value = p.matric_number;
-    if (em && p.email)         em.value = p.email;
+    // Reset first so switching players never leaves another player's data behind
+    if (fn) fn.value = p.full_name     || '';
+    if (mn) mn.value = p.matric_number || '';
+    if (em) em.value = p.email         || '';
     renderPlayerStatus(p);
   }
 

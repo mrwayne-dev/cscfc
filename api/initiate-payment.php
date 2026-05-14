@@ -140,11 +140,11 @@ $db->prepare("UPDATE players SET full_name = ?, matric_number = ?, email = ? WHE
 
 // Fire the profile-saved email when the captured details actually changed.
 // Best-effort: a mailer failure must not block the Paystack redirect.
+// NOTE: this runs before Paystack confirms the payment, so the CTA must
+// reflect the player's CURRENT balance — not an optimistic post-payment one.
 $profileEmailSent = false;
 if ($profileChanged) {
-    // After this payment, paid total will go up by $amount — surface accurate CTA
-    $newRemaining   = max(0, (int) $player['target_amount'] - ((int) $player['amount_paid'] + $amount));
-    $hasOutstanding = $newRemaining > 0;
+    $hasOutstanding   = (int) $player['amount_paid'] < (int) $player['target_amount'];
     $profileEmailSent = sendProfileSavedEmail($email, $player['name'], $fullName, $matricNumber, $hasOutstanding);
 }
 
