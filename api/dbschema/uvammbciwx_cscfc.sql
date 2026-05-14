@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: May 13, 2026 at 03:31 PM
+-- Generation Time: May 14, 2026 at 10:56 AM
 -- Server version: 11.4.10-MariaDB-cll-lve
 -- PHP Version: 8.3.31
 
@@ -86,7 +86,8 @@ INSERT INTO `payments` (`id`, `player_id`, `email`, `amount`, `reference`, `paym
 (19, 2, 'danjumbogab@gmail.com', 3500, 'CSCFC-2-05769179', 'installment', 'success', '2026-05-10 21:47:39', 'bank', '2026-05-10 21:46:37'),
 (20, 8, 'owenndigbara06@gmail.com', 3500, 'CSCFC-8-64002131', 'installment', 'pending', NULL, NULL, '2026-05-11 22:19:46'),
 (21, 8, 'owenndigbara06@gmail.com', 3500, 'CSCFC-8-82331997', 'installment', 'success', '2026-05-11 22:21:17', 'bank_transfer', '2026-05-11 22:20:34'),
-(22, 18, 'miracleokw@gmail.com', 3500, 'CSCFC-18-92538974', 'installment', 'success', '2026-05-13 07:00:19', 'bank_transfer', '2026-05-13 06:58:46');
+(22, 18, 'miracleokw@gmail.com', 3500, 'CSCFC-18-92538974', 'installment', 'success', '2026-05-13 07:00:19', 'bank_transfer', '2026-05-13 06:58:46'),
+(23, 9, 'joshuaorinate02@gmail.com', 3500, 'CSCFC-9-61960920', 'installment', 'success', '2026-05-13 19:52:54', 'bank_transfer', '2026-05-13 19:51:48');
 
 -- --------------------------------------------------------
 
@@ -97,6 +98,8 @@ INSERT INTO `payments` (`id`, `player_id`, `email`, `amount`, `reference`, `paym
 CREATE TABLE `players` (
   `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(100) NOT NULL,
+  `full_name` varchar(150) DEFAULT NULL,
+  `matric_number` varchar(50) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   `target_amount` int(10) UNSIGNED NOT NULL DEFAULT 7000,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
@@ -106,33 +109,33 @@ CREATE TABLE `players` (
 -- Dumping data for table `players`
 --
 
-INSERT INTO `players` (`id`, `name`, `email`, `target_amount`, `created_at`) VALUES
-(1, 'Michael', 'mickiawesome77@gmail.com', 7000, '2026-03-16 14:23:41'),
-(2, 'Gabi', 'danjumbogab@gmail.com', 7000, '2026-03-16 14:23:41'),
-(3, 'Rex', NULL, 7000, '2026-03-16 14:23:41'),
-(4, 'Diepiriye', NULL, 7000, '2026-03-16 14:23:41'),
-(5, 'Goodluck', 'johngoodluck294@gmail.com', 7000, '2026-03-16 14:23:41'),
-(6, 'Bobby', 'williamschristopherndam@gmail.com', 7000, '2026-03-16 14:23:41'),
-(7, 'Kennedy', 'nsirimkennedy@gmail.com', 7000, '2026-03-16 14:23:41'),
-(8, 'Owen', 'owenndigbara06@gmail.com', 7000, '2026-03-16 14:23:41'),
-(9, 'Bellingham', NULL, 7000, '2026-03-16 14:23:41'),
-(10, 'Champion', 'rechidee@gmail.com', 7000, '2026-03-16 14:23:41'),
-(11, 'Destiny', 'destinybishop49@gmail.com', 7000, '2026-03-16 14:23:41'),
-(12, 'Etienne', 'etienearchibong09@gmail.com', 7000, '2026-03-16 14:23:41'),
-(13, 'Fortune', NULL, 7000, '2026-03-16 14:23:41'),
-(14, 'Franklin', 'franklincaleb045@gmail.com', 7000, '2026-03-16 14:23:41'),
-(15, 'Genesis', NULL, 7000, '2026-03-16 14:23:41'),
-(16, 'Ibiso', NULL, 7000, '2026-03-16 14:23:41'),
-(17, 'Jobi', NULL, 7000, '2026-03-16 14:23:41'),
-(18, 'Mill', 'miracleokw@gmail.com', 7000, '2026-03-16 14:23:41'),
-(19, 'Miller', NULL, 7000, '2026-03-16 14:23:41'),
-(20, 'Raymond', NULL, 7000, '2026-03-16 14:23:41'),
-(21, 'Reuben', 'kurounited@icloud.com', 7000, '2026-03-16 14:23:41'),
-(22, 'Royal', 'royalamaeze@gmail.com', 7000, '2026-03-16 14:23:41'),
-(23, 'Samuel', NULL, 7000, '2026-03-16 14:23:41'),
-(24, 'Sultan', NULL, 7000, '2026-03-16 14:23:41'),
-(25, 'Winter', 'winterff55@gmail.com', 7000, '2026-03-16 14:23:41'),
-(26, 'Omezi', 'Ogowis13@gmail.com', 7000, '2026-05-13 12:54:56');
+INSERT INTO `players` (`id`, `name`, `full_name`, `matric_number`, `email`, `target_amount`, `created_at`) VALUES
+(1, 'Michael', NULL, NULL, 'mickiawesome77@gmail.com', 7000, '2026-03-16 14:23:41'),
+(2, 'Gabi', NULL, NULL, 'danjumbogab@gmail.com', 7000, '2026-03-16 14:23:41'),
+(3, 'Rex', NULL, NULL, NULL, 7000, '2026-03-16 14:23:41'),
+(4, 'Diepiriye', NULL, NULL, NULL, 7000, '2026-03-16 14:23:41'),
+(5, 'Goodluck', NULL, NULL, 'johngoodluck294@gmail.com', 7000, '2026-03-16 14:23:41'),
+(6, 'Bobby', NULL, NULL, 'williamschristopherndam@gmail.com', 7000, '2026-03-16 14:23:41'),
+(7, 'Kennedy', NULL, NULL, 'nsirimkennedy@gmail.com', 7000, '2026-03-16 14:23:41'),
+(8, 'Owen', NULL, NULL, 'owenndigbara06@gmail.com', 7000, '2026-03-16 14:23:41'),
+(9, 'Bellingham', NULL, NULL, 'joshuaorinate02@gmail.com', 7000, '2026-03-16 14:23:41'),
+(10, 'Champion', NULL, NULL, 'rechidee@gmail.com', 7000, '2026-03-16 14:23:41'),
+(11, 'Destiny', NULL, NULL, 'destinybishop49@gmail.com', 7000, '2026-03-16 14:23:41'),
+(12, 'Etienne', NULL, NULL, 'etienearchibong09@gmail.com', 7000, '2026-03-16 14:23:41'),
+(13, 'Fortune', NULL, NULL, NULL, 7000, '2026-03-16 14:23:41'),
+(14, 'Franklin', NULL, NULL, 'franklincaleb045@gmail.com', 7000, '2026-03-16 14:23:41'),
+(15, 'Genesis', NULL, NULL, NULL, 7000, '2026-03-16 14:23:41'),
+(16, 'Ibiso', NULL, NULL, NULL, 7000, '2026-03-16 14:23:41'),
+(17, 'Jobi', NULL, NULL, NULL, 7000, '2026-03-16 14:23:41'),
+(18, 'Mill', NULL, NULL, 'miracleokw@gmail.com', 7000, '2026-03-16 14:23:41'),
+(19, 'Miller', NULL, NULL, NULL, 7000, '2026-03-16 14:23:41'),
+(20, 'Raymond', NULL, NULL, NULL, 7000, '2026-03-16 14:23:41'),
+(21, 'Reuben', NULL, NULL, 'kurounited@icloud.com', 7000, '2026-03-16 14:23:41'),
+(22, 'Royal', NULL, NULL, 'royalamaeze@gmail.com', 7000, '2026-03-16 14:23:41'),
+(23, 'Samuel', NULL, NULL, NULL, 7000, '2026-03-16 14:23:41'),
+(24, 'Sultan', NULL, NULL, NULL, 7000, '2026-03-16 14:23:41'),
+(25, 'Winter', NULL, NULL, 'winterff55@gmail.com', 7000, '2026-03-16 14:23:41'),
+(26, 'Omezi', NULL, NULL, 'Ogowis13@gmail.com', 7000, '2026-05-13 12:54:56');
 
 --
 -- Indexes for dumped tables
@@ -158,7 +161,8 @@ ALTER TABLE `payments`
 -- Indexes for table `players`
 --
 ALTER TABLE `players`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uq_matric_number` (`matric_number`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -174,7 +178,7 @@ ALTER TABLE `admins`
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `players`
