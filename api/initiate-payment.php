@@ -18,7 +18,10 @@ $matricNumber = trim($body['matric_number'] ?? '');
 // Basic validation
 if ($playerId <= 0) json_err('Invalid player_id.');
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) json_err('Invalid email address.');
-if ($amount < MIN_INSTALLMENT) json_err('Amount must be at least ₦' . number_format(MIN_INSTALLMENT) . '.');
+if ($amount <= 0) json_err('Amount must be positive.');
+// NOTE: the MIN_INSTALLMENT floor is enforced AFTER we know the remaining
+// balance — a player whose remaining balance is below the minimum still needs
+// to be able to clear it.
 if ($fullName === '') json_err('Full name is required.');
 if ($matricNumber === '') json_err('Matric number is required.');
 if (mb_strlen($fullName)     > 150) json_err('Full name is too long.');
@@ -62,6 +65,15 @@ if ($remaining <= 0) {
     exit;
 }
 if ($amount > $remaining) json_err('Amount exceeds remaining balance of ₦' . number_format($remaining) . '.');
+
+// Enforce the installment floor here so a player whose remaining balance is
+// below MIN_INSTALLMENT can still pay it out in one go.
+if ($amount < MIN_INSTALLMENT && $amount !== $remaining) {
+    json_err(
+        'Amount must be at least ₦' . number_format(MIN_INSTALLMENT)
+        . ' — or pay out your remaining ₦' . number_format($remaining) . ' in full.'
+    );
+}
 
 // Reject submissions whose matric/email is already attached to a different player
 $dupMatric = $db->prepare("SELECT id FROM players WHERE matric_number = ? AND id <> ? LIMIT 1");

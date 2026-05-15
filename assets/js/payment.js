@@ -115,9 +115,16 @@ CSCFC.payPage = (function () {
       if (amountInput.value === '' || Number(amountInput.value) > remaining) {
         amountInput.value = '';
       }
-      amountHint.textContent =
-        'Minimum \u20a6' + MIN_INSTALLMENT.toLocaleString() +
-        ' \u2014 max \u20a6' + Number(remaining).toLocaleString() + ' remaining';
+      if (remaining < MIN_INSTALLMENT) {
+        // Under-minimum: only \u20a6{remaining} will clear the balance
+        amountHint.textContent =
+          'Only \u20a6' + Number(remaining).toLocaleString() +
+          ' left \u2014 enter \u20a6' + Number(remaining).toLocaleString() + ' to clear it.';
+      } else {
+        amountHint.textContent =
+          'Minimum \u20a6' + MIN_INSTALLMENT.toLocaleString() +
+          ' \u2014 max \u20a6' + Number(remaining).toLocaleString() + ' remaining';
+      }
     }
 
     setFieldError('amountError', '');
@@ -191,12 +198,15 @@ CSCFC.payPage = (function () {
     } else if (remaining <= 0) {
       setFieldError('amountError', 'You are already fully paid!');
       valid = false;
-    } else if (amt < MIN_INSTALLMENT) {
-      setFieldError('amountError', 'Minimum installment is \u20a6' + MIN_INSTALLMENT.toLocaleString() + '.');
-      valid = false;
     } else if (amt > remaining) {
       setFieldError('amountError',
         'Amount exceeds your remaining balance of \u20a6' + Number(remaining).toLocaleString() + '.');
+      valid = false;
+    } else if (amt < MIN_INSTALLMENT && amt !== remaining) {
+      // Under-minimum is OK ONLY if the player is paying out their final balance
+      setFieldError('amountError',
+        'Minimum installment is \u20a6' + MIN_INSTALLMENT.toLocaleString() +
+        ' \u2014 or pay your remaining \u20a6' + Number(remaining).toLocaleString() + ' in full.');
       valid = false;
     }
 
